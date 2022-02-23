@@ -2,20 +2,22 @@ import aquality.selenium.browser.AqualityServices;
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
+import model.Game;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pageObject.MainPage;
-import pageObject.Page;
+import pageObject.*;
 
+import static Utils.BrowserUtils.clickEnter;
 import static aquality.selenium.browser.AqualityServices.getBrowser;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class SmartSteamTest {
     protected static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
     protected static final ISettingsFile TEST_DATA_FILE = new JsonSettingsFile("testData.json");
     protected static final String DEFAULT_URL = CONFIG_FILE.getValue("/mainPage").toString();
-    protected static final String PAGE_ACTION = TEST_DATA_FILE.getValue("/pageAction").toString();
+    protected static final int YEAR_OLD = (int) TEST_DATA_FILE.getValue("/yearOld");
 
     @BeforeMethod
     protected void beforeMethod() {
@@ -32,12 +34,31 @@ public class SmartSteamTest {
         mainPage.clickLinkActions();
 
         Page page = new Page();
-        assertTrue(page.isPageDisplayed(PAGE_ACTION), "Action page not showing");
+        assertTrue(page.state().isDisplayed(), "Page not showing");
 
         page.clickTabTopSeller();
-        assertTrue(page.isActiveTabTopSeller(),"TopSeller tab is not active");
+        assertTrue(page.isActiveTabTopSeller(), "TopSeller tab is not active");
+        page.createTabContent();
+        Game gameFromTopSeller = page.tabContent.clickGameWithMaxDiscount();
 
-        page.clickGameWithMaxDiscount();
+        AgeCheckPage ageCheck = new AgeCheckPage();
+        if (ageCheck.state().isDisplayed()) {
+            ageCheck.voiceDay();
+            ageCheck.voiceMonth();
+            ageCheck.voiceYear(YEAR_OLD);
+            ageCheck.clickViewPage();
+        }
+
+        GamePage gamePage = new GamePage();
+        Game gameFromGamePage = gamePage.getGameFromGamePage();
+
+        assertEquals(gameFromGamePage, gameFromTopSeller, "Game price or discount does not match");
+
+        gamePage.globalHeader.clickInstallSteam();
+
+        AboutPage aboutPage = new AboutPage();
+        aboutPage.clickInstallSteam();
+        clickEnter();
     }
 
     @AfterMethod

@@ -17,4 +17,14 @@ public class StringUtils {
             throw new IllegalArgumentException(INVALID_STR);
         }
     }
+
+    public static float getPriceFromStr(String str) {
+        Matcher matcher = Pattern.compile("\\d+[.,]\\d+").matcher(str);
+        if (matcher.find()) {
+            return Float.parseFloat(matcher.group());
+        } else {
+            Logger.getInstance().info(INVALID_STR);
+            throw new IllegalArgumentException(INVALID_STR);
+        }
+    }
 }
