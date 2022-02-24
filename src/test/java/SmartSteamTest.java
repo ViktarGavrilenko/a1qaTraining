@@ -8,16 +8,21 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pageObject.*;
 
-import static Utils.BrowserUtils.clickEnter;
+import java.io.File;
+
+import static Utils.BrowserUtils.getFileLength;
+import static Utils.BrowserUtils.isDownloadFile;
+import static Utils.StringUtils.getNameFileFromUrl;
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class SmartSteamTest {
-    protected static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
-    protected static final ISettingsFile TEST_DATA_FILE = new JsonSettingsFile("testData.json");
-    protected static final String DEFAULT_URL = CONFIG_FILE.getValue("/mainPage").toString();
-    protected static final int YEAR_OLD = (int) TEST_DATA_FILE.getValue("/yearOld");
+    private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
+    private static final ISettingsFile TEST_DATA_FILE = new JsonSettingsFile("testData.json");
+    private static final String DEFAULT_URL = CONFIG_FILE.getValue("/mainPage").toString();
+    private static final int YEAR_OLD = (int) TEST_DATA_FILE.getValue("/yearOld");
+    private static final String DOWNLOADS_DIR = TEST_DATA_FILE.getValue("/downloadsDir").toString();
 
     @BeforeMethod
     protected void beforeMethod() {
@@ -32,33 +37,38 @@ public class SmartSteamTest {
         assertTrue(mainPage.state().isDisplayed(), "Main page not showing");
         mainPage.clickLinkCategories();
         mainPage.clickLinkActions();
-
         Page page = new Page();
         assertTrue(page.state().isDisplayed(), "Page not showing");
 
         page.clickTabTopSeller();
         assertTrue(page.isActiveTabTopSeller(), "TopSeller tab is not active");
+
         page.createTabContent();
         Game gameFromTopSeller = page.tabContent.clickGameWithMaxDiscount();
+        AgeCheckFirstPage ageCheck = new AgeCheckFirstPage();
+        AgeCheckSecondPage ageCheckSecond = new AgeCheckSecondPage();
 
-        AgeCheckPage ageCheck = new AgeCheckPage();
         if (ageCheck.state().isDisplayed()) {
-            ageCheck.voiceDay();
-            ageCheck.voiceMonth();
-            ageCheck.voiceYear(YEAR_OLD);
-            ageCheck.clickViewPage();
+            ageCheck.voiceDate(YEAR_OLD);
+        } else {
+            if (ageCheckSecond.state().isDisplayed()) {
+                ageCheckSecond.clickButtonViewPage();
+            }
         }
 
         GamePage gamePage = new GamePage();
         Game gameFromGamePage = gamePage.getGameFromGamePage();
-
         assertEquals(gameFromGamePage, gameFromTopSeller, "Game price or discount does not match");
 
         gamePage.globalHeader.clickInstallSteam();
-
         AboutPage aboutPage = new AboutPage();
         aboutPage.clickInstallSteam();
-        clickEnter();
+        long fileSizeOnWebSite = getFileLength(aboutPage.getUrlFromLink());
+        String filePath = DOWNLOADS_DIR + "/" + getNameFileFromUrl(aboutPage.getUrlFromLink());
+        assertTrue(isDownloadFile(filePath), "File should be downloaded");
+
+        File file = new File(filePath);
+        assertEquals(file.length(), fileSizeOnWebSite, "File sizes are not equal");
     }
 
     @AfterMethod

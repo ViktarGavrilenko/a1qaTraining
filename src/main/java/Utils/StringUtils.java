@@ -27,4 +27,8 @@ public class StringUtils {
             throw new IllegalArgumentException(INVALID_STR);
         }
     }
+
+    public static String getNameFileFromUrl(String url){
+        return url.substring(url.lastIndexOf("/") + 1);
+    }
 }

@@ -15,4 +15,8 @@ public class AboutPage extends Form {
     public void clickInstallSteam() {
         linkInstallSteam.click();
     }
+
+    public String getUrlFromLink() {
+        return linkInstallSteam.getHref();
+    }
 }
