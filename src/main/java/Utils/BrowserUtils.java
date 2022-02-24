@@ -34,11 +34,13 @@ public class BrowserUtils {
             conn.setRequestMethod("HEAD");
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows 7; WOW64) AppleWebKit/537.36 " +
                     "(KHTML, like Gecko) Chrome/47.0.2526.73 Safari/537.36 YNoteCef/5.8.0.1 (Windows)");
-            return (long) conn.getContentLength();
+            return conn.getContentLength();
         } catch (IOException e) {
             return 0L;
         } finally {
-            conn.disconnect();
+            if (conn != null) {
+                conn.disconnect();
+            }
         }
     }
 }
