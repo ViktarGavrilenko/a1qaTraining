@@ -1,11 +1,12 @@
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
+import models.Car;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pageobject.Cars;
 import pageobject.DescriptionCar;
+import pageobject.MainCars;
 import pageobject.Research;
 import pageobject.Trim;
 
@@ -24,16 +25,30 @@ public class CarsTest extends Assert {
 
     @Test(description = "Cars test")
     public void testCars() {
-        Cars cars = new Cars();
-        cars.clickResearch();
+        MainCars mainCars = new MainCars();
+        mainCars.clickResearch();
         Research research = new Research();
         assertTrue(research.state().isDisplayed(), "Research page not showing");
-        research.generateRandomCar();
-        DescriptionCar descriptionCar = new DescriptionCar();
-        assertTrue(descriptionCar.state().isDisplayed(), "Car description page not showing");
-        descriptionCar.clickTrim();
-        Trim trim = new Trim();
-        assertTrue(trim.state().isDisplayed(), "Trim page not showing");
+        Car firstCar = null;
+        Trim trim =null;
+
+        boolean isTrim = false;
+        while (!isTrim) {
+            firstCar = research.generateRandomCar();
+            DescriptionCar descriptionCar = new DescriptionCar();
+            assertTrue(descriptionCar.state().isDisplayed(), "Car description page not showing");
+            descriptionCar.clickTrim();
+            trim = new Trim();
+            assertTrue(trim.state().isDisplayed(), "Trim page not showing");
+            if (trim.isFirstTrim()) {
+                isTrim = true;
+            } else {
+                descriptionCar.clickResearch();
+            }
+        }
+        trim.clickFirstTrim();
+        firstCar.engine = trim.getEngineName();
+        firstCar.transmission = trim.getTransmission();
     }
 
     @AfterMethod

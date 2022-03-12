@@ -4,12 +4,12 @@ import aquality.selenium.elements.interfaces.ILink;
 import aquality.selenium.forms.Form;
 import org.openqa.selenium.By;
 
-public class Cars extends Form {
+public class MainCars extends Form {
     private final ILink research = getElementFactory().
             getLink(By.cssSelector("li.header-link a[data-linkname$='research']"), "Research");
 
-    public Cars() {
-        super(By.cssSelector("div#search-widget"), "Search widget");
+    public MainCars() {
+        super(By.cssSelector("header.global-header"), "Header");
     }
 
     public void clickResearch() {

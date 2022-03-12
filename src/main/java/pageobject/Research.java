@@ -3,6 +3,7 @@ package pageobject;
 import aquality.selenium.elements.interfaces.IButton;
 import aquality.selenium.elements.interfaces.IComboBox;
 import aquality.selenium.forms.Form;
+import models.Car;
 import org.openqa.selenium.By;
 
 import static utils.ArithmeticUtils.generateRandomIntUpToMaxWithoutZero;
@@ -21,26 +22,31 @@ public class Research extends Form {
         super(By.cssSelector("div.research-search"), "Research search");
     }
 
-    public void selectRandomMake() {
+    public String selectRandomMake() {
         make.selectByIndex(generateRandomIntUpToMaxWithoutZero(make.getValues().size()));
+        return make.getSelectedText();
     }
 
-    public void selectRandomModel() {
+    public String selectRandomModel() {
         model.selectByIndex(generateRandomIntUpToMaxWithoutZero(model.getValues().size()));
+        return model.getSelectedText();
     }
 
-    public void selectRandomYear() {
+    public String  selectRandomYear() {
         year.selectByIndex(generateRandomIntUpToMaxWithoutZero(year.getValues().size()));
+        return year.getSelectedText();
     }
 
     public void clickResearch() {
         researchButton.click();
     }
 
-    public void generateRandomCar() {
-        selectRandomMake();
-        selectRandomModel();
-        selectRandomYear();
+    public Car generateRandomCar() {
+        Car car = new Car();
+        car.make = selectRandomMake();
+        car.model = selectRandomModel();
+        car.year = selectRandomYear();
         clickResearch();
+        return car;
     }
 }
