@@ -12,7 +12,9 @@ public class Trim extends Form {
                     "//div[@class='sds-accordion'][1]//th[text()='Transmission']/../following-sibling::tr[1]/td[1]"),
             "Transmission");
     private final IButton firstTrim =
-            getElementFactory().getButton(By.cssSelector("button#research-compare-trim-0-trigger1"), "First trim");
+            getElementFactory().getButton(By.xpath("//button[contains(@id,'research-compare-trim')]"), "First trim");
+
+    private final Header header = new Header();
 
     public Trim() {
         super(By.cssSelector("section.trim-accordion-container"), "Trim accordion container");
@@ -32,5 +34,9 @@ public class Trim extends Form {
 
     public boolean isFirstTrim() {
         return firstTrim.state().isDisplayed();
+    }
+
+    public void clickResearch() {
+        header.clickResearch();
     }
 }

@@ -5,10 +5,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pageobject.DescriptionCar;
-import pageobject.MainCars;
-import pageobject.Research;
-import pageobject.Trim;
+import pageobject.*;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 
@@ -25,21 +22,24 @@ public class CarsTest extends Assert {
 
     @Test(description = "Cars test")
     public void testCars() {
-        MainCars mainCars = new MainCars();
-        mainCars.clickResearch();
+        Header header = new Header();
+        header.clickResearch();
+
         Research research = new Research();
         assertTrue(research.state().isDisplayed(), "Research page not showing");
         Car firstCar = null;
-        Trim trim =null;
-
+        Trim trim = null;
+        DescriptionCar descriptionCar;
         boolean isTrim = false;
         while (!isTrim) {
             firstCar = research.generateRandomCar();
-            DescriptionCar descriptionCar = new DescriptionCar();
+            descriptionCar = new DescriptionCar();
             assertTrue(descriptionCar.state().isDisplayed(), "Car description page not showing");
+
             descriptionCar.clickTrim();
             trim = new Trim();
             assertTrue(trim.state().isDisplayed(), "Trim page not showing");
+
             if (trim.isFirstTrim()) {
                 isTrim = true;
             } else {
@@ -49,6 +49,46 @@ public class CarsTest extends Assert {
         trim.clickFirstTrim();
         firstCar.engine = trim.getEngineName();
         firstCar.transmission = trim.getTransmission();
+
+        getBrowser().goTo(DEFAULT_URL);
+        header = new Header();
+        header.clickResearch();
+
+        research = new Research();
+        assertTrue(research.state().isDisplayed(), "Research page not showing");
+        Car secondCar = null;
+        trim = null;
+
+        isTrim = false;
+        while (!isTrim) {
+            secondCar = research.generateRandomCar();
+            descriptionCar = new DescriptionCar();
+            assertTrue(descriptionCar.state().isDisplayed(), "Car description page not showing");
+
+            descriptionCar.clickTrim();
+            trim = new Trim();
+            assertTrue(trim.state().isDisplayed(), "Trim page not showing");
+
+            if (trim.isFirstTrim()) {
+                isTrim = true;
+            } else {
+                descriptionCar.clickResearch();
+            }
+        }
+        trim.clickFirstTrim();
+        secondCar.engine = trim.getEngineName();
+        secondCar.transmission = trim.getTransmission();
+
+        trim.clickResearch();
+        research = new Research();
+        assertTrue(research.state().isDisplayed(), "Research page not showing");
+        research.clickComparisons();
+
+        Compare compare = new Compare();
+        compare.clickAddCar();
+        compare.addFirstCar(firstCar);
+        compare.clickAddCar();
+        compare.addFirstCar(secondCar);
     }
 
     @AfterMethod

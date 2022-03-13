@@ -2,6 +2,7 @@ package pageobject;
 
 import aquality.selenium.elements.interfaces.IButton;
 import aquality.selenium.elements.interfaces.IComboBox;
+import aquality.selenium.elements.interfaces.ILink;
 import aquality.selenium.forms.Form;
 import models.Car;
 import org.openqa.selenium.By;
@@ -17,6 +18,11 @@ public class Research extends Form {
             getElementFactory().getComboBox(By.cssSelector("select#year-select"), "Car year");
     private final IButton researchButton =
             getElementFactory().getButton(By.cssSelector("div.research-search button"), "Research button");
+    private final ILink comparisons = getElementFactory().getLink(
+            By.xpath("//h3[text()='Side-by-side comparisons']//following-sibling::a"), "Side-by-side comparisons");
+
+
+    //h3[text()='Side-by-side comparisons']//following-sibling::a
 
     public Research() {
         super(By.cssSelector("div.research-search"), "Research search");
@@ -48,5 +54,9 @@ public class Research extends Form {
         car.year = selectRandomYear();
         clickResearch();
         return car;
+    }
+
+    public void clickComparisons(){
+        comparisons.click();
     }
 }
