@@ -35,7 +35,7 @@ public class Research extends Form {
         return model.getSelectedText();
     }
 
-    public String  selectRandomYear() {
+    public String selectRandomYear() {
         year.selectByIndex(generateRandomIntUpToMaxWithoutZero(year.getValues().size()));
         return year.getSelectedText();
     }
@@ -53,7 +53,7 @@ public class Research extends Form {
         return car;
     }
 
-    public void clickComparisons(){
+    public void clickComparisons() {
         comparisons.click();
     }
 }

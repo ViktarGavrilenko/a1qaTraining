@@ -21,20 +21,12 @@ public class Compare extends Form {
             getElementFactory().getComboBox(By.cssSelector("select#vehicle_selection_trim"), "Car trim");
     private final IButton buttonAddCar =
             getElementFactory().getButton(By.cssSelector("div.sds-field button.sds-button"), "Button add car");
-    private final ITextBox detailsFirstCar =
-            getElementFactory().getTextBox(By.xpath("(//div[@class='details'])[1]//p[1]"), "Details first car");
-    private final ITextBox detailsSecondCar =
-            getElementFactory().getTextBox(By.xpath("(//div[@class='details'])[2]//p[1]"), "Details second car");
     private final IButton seeComparison = getElementFactory().
             getButton(By.cssSelector("div.comparison-container button.sds-button"), "See the comparison");
-    private final ITextBox engineFirst = getElementFactory().getTextBox(By.xpath(
-            "((//tr[@class='table-section engine-section']//following-sibling::tr)[1]//p)[1]"), "Engine of first car");
-    private final ITextBox engineSecond = getElementFactory().getTextBox(By.xpath(
-            "((//tr[@class='table-section engine-section']//following-sibling::tr)[1]//p)[2]"), "Engine of second car");
-    private final ITextBox transmissionsFirst = getElementFactory().getTextBox(By.xpath(
-            "//td[text()='Transmissions']//..//following-sibling::tr[1]//td[1]//p[1]"), "Transmissions of first car");
-    private final ITextBox transmissionsSecond = getElementFactory().getTextBox(By.xpath(
-            "//td[text()='Transmissions']//..//following-sibling::tr[1]//td[1]//p[1]"), "Transmissions of second car");
+
+    private final String details = "(//div[@class='details'])[%s]//p[1]";
+    private final String engine = "((//tr[@class='table-section engine-section']//following-sibling::tr)[1]//p)[%s]";
+    private final String transmissions = "//td[text()='Transmissions']//..//following-sibling::tr[1]//td[%s]//p[1]";
 
     public Compare() {
         super(By.cssSelector("div.comparison-container"), "Comparison container");
@@ -54,34 +46,29 @@ public class Compare extends Form {
         year.selectByText(car.year);
         trim.state().waitForClickable();
         trim.selectByText(car.style);
+        buttonAddCar.state().waitForClickable();
         buttonAddCar.click();
-    }
-
-    public String getDetailsFirstCar() {
-        return detailsFirstCar.getText();
-    }
-
-    public String getDetailsSecondCar() {
-        return detailsSecondCar.getText();
     }
 
     public void clickSeeComparison() {
         seeComparison.click();
     }
 
-    public String getFirstEngine() {
-        return engineFirst.getText();
+    public String getDetails(String numberCar) {
+        ITextBox detailsOfCar = getElementFactory().getTextBox(By.xpath(String.format(details, numberCar)),
+                "Details " + numberCar + " car");
+        return detailsOfCar.getText();
     }
 
-    public String getSecondEngine() {
-        return engineSecond.getText();
+    public String getEngine(String numberCar) {
+        ITextBox engineOfCar = getElementFactory().getTextBox(By.xpath(String.format(engine, numberCar)),
+                "Engine of " + numberCar + " car");
+        return engineOfCar.getText();
     }
 
-    public String getFirstTransmissions() {
-        return transmissionsFirst.getText();
-    }
-
-    public String getSecondTransmissions() {
-        return transmissionsSecond.getText();
+    public String getTransmissions(String numberCar) {
+        ITextBox transmissionsOfCar = getElementFactory().getTextBox(By.xpath(String.format(transmissions, numberCar)),
+                "Transmissions of " + numberCar + " car");
+        return transmissionsOfCar.getText();
     }
 }

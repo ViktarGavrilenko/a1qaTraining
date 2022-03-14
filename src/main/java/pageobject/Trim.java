@@ -12,9 +12,8 @@ public class Trim extends Form {
                     "//div[@class='sds-accordion'][1]//th[text()='Transmission']/../following-sibling::tr[1]/td[1]"),
             "Transmission");
     private final ITextBox style = getElementFactory().getTextBox(By.xpath(
-            "//div[@class='sds-accordion'][1]//th[text()='Style']/../following-sibling::tr[1]/td[1]"),
+                    "//div[@class='sds-accordion'][1]//th[text()='Style']/../following-sibling::tr[1]/td[1]"),
             "Style");
-
     private final IButton firstTrim = getElementFactory().getButton(
             By.xpath("(//button[contains(@id,'research-compare-trim')])[1]//span"), "First trim");
 

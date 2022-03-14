@@ -12,6 +12,8 @@ import static aquality.selenium.browser.AqualityServices.getBrowser;
 public class CarsTest extends Assert {
     private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
     private static final ISettingsFile TEST_FILE = new JsonSettingsFile("testData.json");
+    private static final String numberFirstCar = TEST_FILE.getValue("/firstCar").toString();
+    private static final String numberSecondCar = TEST_FILE.getValue("/secondCar").toString();
     private static final String DEFAULT_URL = CONFIG_FILE.getValue("/mainPage").toString();
 
     @BeforeMethod
@@ -87,17 +89,26 @@ public class CarsTest extends Assert {
         research.clickComparisons();
 
         Compare compare = new Compare();
+        assertTrue(compare.state().isDisplayed(), "Compare page not showing");
+
         compare.clickAddCar();
         compare.addCar(firstCar);
         String detailsFirstCar = firstCar.year + " " + firstCar.make + " " + firstCar.model;
-        assertEquals(compare.getDetailsFirstCar(), detailsFirstCar, "Wrong car selected" );
+        assertEquals(compare.getDetails(numberFirstCar), detailsFirstCar, "Wrong car selected");
+
         compare.clickAddCar();
         compare.addCar(secondCar);
         String detailsSecondCar = secondCar.year + " " + secondCar.make + " " + secondCar.model;
-        assertEquals(compare.getDetailsSecondCar(), detailsSecondCar, "Wrong car selected" );
+        assertEquals(compare.getDetails(numberSecondCar), detailsSecondCar, "Wrong car selected");
+
         compare.clickSeeComparison();
-
-
+        assertEquals(compare.getTransmissions(numberFirstCar), firstCar.transmission,
+                "The transmission in the first car does not match");
+        assertEquals(compare.getTransmissions(numberSecondCar), secondCar.transmission,
+                "The transmission in the second car does not match");
+        assertEquals(compare.getEngine(numberFirstCar), firstCar.engine, "The engine in the first car does not match");
+        assertEquals(compare.getEngine(numberSecondCar), secondCar.transmission,
+                "The engine in the second car does not match");
     }
 
     @AfterMethod
