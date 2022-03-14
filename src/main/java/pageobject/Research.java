@@ -21,9 +21,6 @@ public class Research extends Form {
     private final ILink comparisons = getElementFactory().getLink(
             By.xpath("//h3[text()='Side-by-side comparisons']//following-sibling::a"), "Side-by-side comparisons");
 
-
-    //h3[text()='Side-by-side comparisons']//following-sibling::a
-
     public Research() {
         super(By.cssSelector("div.research-search"), "Research search");
     }

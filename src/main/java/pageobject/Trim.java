@@ -11,8 +11,12 @@ public class Trim extends Form {
     private final ITextBox transmission = getElementFactory().getTextBox(By.xpath(
                     "//div[@class='sds-accordion'][1]//th[text()='Transmission']/../following-sibling::tr[1]/td[1]"),
             "Transmission");
-    private final IButton firstTrim =
-            getElementFactory().getButton(By.xpath("//button[contains(@id,'research-compare-trim')]"), "First trim");
+    private final ITextBox style = getElementFactory().getTextBox(By.xpath(
+            "//div[@class='sds-accordion'][1]//th[text()='Style']/../following-sibling::tr[1]/td[1]"),
+            "Style");
+
+    private final IButton firstTrim = getElementFactory().getButton(
+            By.xpath("(//button[contains(@id,'research-compare-trim')])[1]//span"), "First trim");
 
     private final Header header = new Header();
 
@@ -22,6 +26,10 @@ public class Trim extends Form {
 
     public void clickFirstTrim() {
         firstTrim.click();
+    }
+
+    public String getStyle() {
+        return style.getText();
     }
 
     public String getEngineName() {

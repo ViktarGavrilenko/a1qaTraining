@@ -47,6 +47,7 @@ public class CarsTest extends Assert {
             }
         }
         trim.clickFirstTrim();
+        firstCar.style = trim.getStyle();
         firstCar.engine = trim.getEngineName();
         firstCar.transmission = trim.getTransmission();
 
@@ -76,6 +77,7 @@ public class CarsTest extends Assert {
             }
         }
         trim.clickFirstTrim();
+        secondCar.style = trim.getStyle();
         secondCar.engine = trim.getEngineName();
         secondCar.transmission = trim.getTransmission();
 
@@ -86,9 +88,16 @@ public class CarsTest extends Assert {
 
         Compare compare = new Compare();
         compare.clickAddCar();
-        compare.addFirstCar(firstCar);
+        compare.addCar(firstCar);
+        String detailsFirstCar = firstCar.year + " " + firstCar.make + " " + firstCar.model;
+        assertEquals(compare.getDetailsFirstCar(), detailsFirstCar, "Wrong car selected" );
         compare.clickAddCar();
-        compare.addFirstCar(secondCar);
+        compare.addCar(secondCar);
+        String detailsSecondCar = secondCar.year + " " + secondCar.make + " " + secondCar.model;
+        assertEquals(compare.getDetailsSecondCar(), detailsSecondCar, "Wrong car selected" );
+        compare.clickSeeComparison();
+
+
     }
 
     @AfterMethod
