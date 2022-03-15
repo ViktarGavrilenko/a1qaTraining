@@ -1,5 +1,6 @@
 package pageobject;
 
+import aquality.selenium.elements.ElementType;
 import aquality.selenium.elements.interfaces.IButton;
 import aquality.selenium.elements.interfaces.IComboBox;
 import aquality.selenium.elements.interfaces.ILink;
@@ -25,7 +26,7 @@ public class Compare extends Form {
             getButton(By.cssSelector("div.comparison-container button.sds-button"), "See the comparison");
 
     private final String details = "(//div[@class='details'])[%s]//p[1]";
-    private final String engine = "((//tr[@class='table-section engine-section']//following-sibling::tr)[1]//p)[%s]";
+    private final String engine = "((//tr[@class='table-section engine-section']//following-sibling::tr)[1]//td)[%s]";
     private final String transmissions = "//td[text()='Transmissions']//..//following-sibling::tr[1]//td[%s]//p[1]";
 
     public Compare() {
@@ -63,7 +64,11 @@ public class Compare extends Form {
     public String getEngine(String numberCar) {
         ITextBox engineOfCar = getElementFactory().getTextBox(By.xpath(String.format(engine, numberCar)),
                 "Engine of " + numberCar + " car");
-        return engineOfCar.getText();
+        if (engineOfCar.findChildElement(By.cssSelector("p"), ElementType.TEXTBOX).state().isDisplayed()) {
+            return engineOfCar.findChildElement(By.cssSelector("p"), ElementType.TEXTBOX).getText();
+        } else {
+            return engineOfCar.getText();
+        }
     }
 
     public String getTransmissions(String numberCar) {

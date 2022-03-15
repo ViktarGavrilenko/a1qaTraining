@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import pageobject.*;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
+import static utils.StringUtils.addSpaceBeforeParenthesis;
 
 public class CarsTest extends Assert {
     private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
@@ -45,7 +46,7 @@ public class CarsTest extends Assert {
             if (trim.isFirstTrim()) {
                 isTrim = true;
             } else {
-                descriptionCar.clickResearch();
+                descriptionCar.header.clickResearch();
             }
         }
         trim.clickFirstTrim();
@@ -75,7 +76,7 @@ public class CarsTest extends Assert {
             if (trim.isFirstTrim()) {
                 isTrim = true;
             } else {
-                descriptionCar.clickResearch();
+                descriptionCar.header.clickResearch();
             }
         }
         trim.clickFirstTrim();
@@ -83,7 +84,7 @@ public class CarsTest extends Assert {
         secondCar.engine = trim.getEngineName();
         secondCar.transmission = trim.getTransmission();
 
-        trim.clickResearch();
+        trim.header.clickResearch();
         research = new Research();
         assertTrue(research.state().isDisplayed(), "Research page not showing");
         research.clickComparisons();
@@ -106,8 +107,9 @@ public class CarsTest extends Assert {
                 "The transmission in the first car does not match");
         assertEquals(compare.getTransmissions(numberSecondCar), secondCar.transmission,
                 "The transmission in the second car does not match");
-        assertEquals(compare.getEngine(numberFirstCar), firstCar.engine, "The engine in the first car does not match");
-        assertEquals(compare.getEngine(numberSecondCar), secondCar.transmission,
+        assertEquals(addSpaceBeforeParenthesis(compare.getEngine(numberFirstCar)), firstCar.engine,
+                "The engine in the first car does not match");
+        assertEquals(addSpaceBeforeParenthesis(compare.getEngine(numberSecondCar)), secondCar.engine,
                 "The engine in the second car does not match");
     }
 

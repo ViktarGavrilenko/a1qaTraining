@@ -7,7 +7,7 @@ import org.openqa.selenium.By;
 public class DescriptionCar extends Form {
     private final ILink trim =
             getElementFactory().getLink(By.cssSelector("div.page-section__content p a"), "Trim link");
-    private final Header header = new Header();
+    public final Header header = new Header();
 
     public DescriptionCar() {
         super(By.cssSelector("div.research-mmy-page"), "Description car");
@@ -15,9 +15,5 @@ public class DescriptionCar extends Form {
 
     public void clickTrim() {
         trim.click();
-    }
-
-    public void clickResearch() {
-        header.clickResearch();
     }
 }
