@@ -1,3 +1,13 @@
 {
-  "numberTimesRandomly": 15
+  "numberTimesRandomly": 15,
+  "numberSingleDeskShip": 4,
+  "numberTwoDeskShip": 3,
+  "numberThreeDeskShip": 2,
+  "numberFourDeskShip": 1,
+  "singleDesk": 1,
+  "twoDesk": 2,
+  "threeDesk": 3,
+  "fourDesk": 4,
+  "fieldWidth": 10,
+  "fieldLength": 10
 }
