@@ -2,6 +2,7 @@ import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
 import battleship.Battlefield;
+import battleship.Cell;
 import battleship.CellOption;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -14,13 +15,14 @@ import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static utils.ArithmeticUtils.generateRandomIntUpToMaxWithoutZero;
 
 public class GameBattleShipTest {
-    protected static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("config.json");
-    protected static final ISettingsFile TEST_DATA_FILE = new JsonSettingsFile("testData.json");
-    protected static final String DEFAULT_URL = CONFIG_FILE.getValue("/mainPage").toString();
-    protected static final Integer numberTimesRandomly =
+    private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("config.json");
+    private static final ISettingsFile TEST_DATA_FILE = new JsonSettingsFile("testData.json");
+    private static final String DEFAULT_URL = CONFIG_FILE.getValue("/mainPage").toString();
+    private static final Integer numberTimesRandomly =
             Integer.parseInt(TEST_DATA_FILE.getValue("/numberTimesRandomly").toString());
-    protected static final byte fieldWidth = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldWidth").toString());
-    protected static final byte fieldLength = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldLength").toString());
+    private static final byte fieldWidth = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldWidth").toString());
+    private static final byte fieldLength = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldLength").toString());
+
 
     @BeforeMethod
     protected void beforeMethod() {
@@ -35,15 +37,14 @@ public class GameBattleShipTest {
             mainPage.clickRandomly();
         }
         mainPage.clickPlay();
+        Battlefield battlefield = new Battlefield(fieldWidth, fieldLength);
+        Cell cellShot;
+        for (int i = 0; i < 40; i++) {
+            cellShot = battlefield.getRandomEmptyCell();
+            cellShot = battlefield.takeShot(cellShot);
+            battlefield.setCellOption(cellShot);
 
-        for (int i = 0; i < 10; i++) {
-            int x = new Random().nextInt(10);
-            int y = new Random().nextInt(10);
-            Battlefield battlefield = new Battlefield(fieldWidth, fieldLength);
-
-            CellOption resultShot = battlefield.takeShot(x, y);
-            battlefield.setCellOption(x, y, resultShot);
-            Logger.getInstance().info("CellOption x = " + x + " y = " + y + " is " + resultShot);
+            Logger.getInstance().info("CellOption x = " + cellShot.x + " y = " + cellShot.y + " is " + cellShot.option);
         }
     }
 

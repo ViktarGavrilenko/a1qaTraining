@@ -2,9 +2,13 @@ package pageobject;
 
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.elements.interfaces.IButton;
+import aquality.selenium.elements.interfaces.ITextBox;
 import aquality.selenium.forms.Form;
+import battleship.Cell;
 import battleship.CellOption;
 import org.openqa.selenium.By;
+
+import java.time.Duration;
 
 public class MainPage extends Form {
     private final IButton randomly =
@@ -13,7 +17,11 @@ public class MainPage extends Form {
     private final IButton play =
             getElementFactory().getButton(By.cssSelector("div.battlefield-start-button"), "Play");
 
-    private final String cellLocator = "//div[contains(@class,'battlefield__rival')]//div[@data-y='%s' and @data-x='%s']/..";
+    private final String cellLocator =
+            "//div[contains(@class,'battlefield__rival')]//div[@data-y='%s' and @data-x='%s']/..";
+
+    private final ITextBox battlefieldOfRival = getElementFactory().getTextBox(
+            By.xpath("//div[@class='battlefield battlefield__rival']"), "Battlefield of rival");
 
     public MainPage() {
         super(By.cssSelector("header h1.logo"), "Name of the game");
@@ -27,31 +35,36 @@ public class MainPage extends Form {
         play.click();
     }
 
-    public CellOption clickCell(int x, int y) {
-        IButton cell = getElementFactory().getButton(By.xpath(String.format(cellLocator, x, y)), "Cell");
-        Logger.getInstance().error(cell.getAttribute("class"));
+    public boolean isBattlefieldOfRivalClick() {
+        return battlefieldOfRival.state().waitForDisplayed(Duration.ofSeconds(30));
+    }
+
+    public Cell clickCell(Cell cellClick) {
+        IButton cell = getElementFactory().getButton(
+                By.xpath(String.format(cellLocator, cellClick.x, cellClick.y)), "Cell");
         if (cell.getAttribute("class").contains(CellOption.empty.toString())) {
             cell.state().waitForClickable();
-            cell.click();
-            IButton cellAfterClick = getElementFactory().getButton(By.xpath(String.format(cellLocator, x, y)), "Cell after click");
-            return getCellOption(cellAfterClick.getAttribute("class"));
+            cell.clickAndWait();
+            IButton cellAfterClick = getElementFactory().getButton(
+                    By.xpath(String.format(cellLocator, cellClick.x, cellClick.y)), "Cell after click");
+            return getCellOption(cellClick, cellAfterClick.getAttribute("class"));
 
         } else {
             Logger.getInstance().error(cell.getAttribute("class"));
-            return getCellOption(cell.getAttribute("class"));        }
+            return getCellOption(cellClick, cell.getAttribute("class"));
+        }
     }
 
-    public CellOption getCellOption(String classOfCell){
+    public Cell getCellOption(Cell cellClick, String classOfCell) {
         if (classOfCell.contains(CellOption.empty.toString())) {
-            return CellOption.empty;
+            cellClick.option = CellOption.empty;
         }
         if (classOfCell.contains(CellOption.hit.toString())) {
-            return CellOption.hit;
+            cellClick.option = CellOption.hit;
         }
         if (classOfCell.contains(CellOption.miss.toString())) {
-            return CellOption.miss;
+            cellClick.option = CellOption.miss;
         }
-
-        return null;
+        return cellClick;
     }
 }

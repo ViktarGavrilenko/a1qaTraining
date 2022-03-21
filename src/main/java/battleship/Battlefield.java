@@ -1,8 +1,11 @@
 package battleship;
 
+import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
 import pageobject.MainPage;
+
+import java.util.Random;
 
 public class Battlefield {
     private Cell[][] field;
@@ -19,6 +22,9 @@ public class Battlefield {
     private static final byte THREE_DESK = Byte.parseByte(TEST_DATA_FILE.getValue("/threeDesk").toString());
     private static final byte FOUR_DESK = Byte.parseByte(TEST_DATA_FILE.getValue("/fourDesk").toString());
 
+    private static final byte fieldWidth = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldWidth").toString());
+    private static final byte fieldLength = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldLength").toString());
+
     private final Ship[] singleDeskShip = new Ship[NUMBER_SINGLE_DESK_SHIP];
     private final Ship[] twoDeskShip = new Ship[NUMBER_TWO_DESK_SHIP];
     private final Ship[] threeDeskShip = new Ship[NUMBER_THREE_DESK_SHIP];
@@ -30,6 +36,9 @@ public class Battlefield {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 field[i][j] = new Cell();
+                field[i][j].x = i;
+                field[i][j].y = j;
+                field[i][j].option = CellOption.empty;
             }
         }
 
@@ -63,11 +72,26 @@ public class Battlefield {
                 getNumberKilledShipsSameType(threeDeskShip) + getNumberKilledShipsSameType(fourDeskShip);
     }
 
-    public CellOption takeShot(int x, int y) {
-        return mainPage.clickCell(x, y);
+    public Cell takeShot(Cell cell) {
+        if (mainPage.isBattlefieldOfRivalClick()) {
+            return mainPage.clickCell(cell);
+        } else {
+            Logger.getInstance().error("Time is over");
+            return null;
+        }
     }
 
-    public void setCellOption(int x, int y, CellOption cellOption) {
-        field[x][y].option = cellOption;
+    public void setCellOption(Cell cell) {
+        field[cell.x][cell.y].option = cell.option;
+    }
+
+    public Cell getRandomEmptyCell() {
+        int x, y;
+        do {
+            x = new Random().nextInt(fieldWidth);
+            y = new Random().nextInt(fieldLength);
+        }
+        while (!field[x][y].option.equals(CellOption.empty));
+        return field[x][y];
     }
 }
