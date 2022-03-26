@@ -3,13 +3,10 @@ import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
 import battleship.Battlefield;
 import battleship.Cell;
-import battleship.CellOption;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pageobject.MainPage;
-
-import java.util.Random;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static utils.ArithmeticUtils.generateRandomIntUpToMaxWithoutZero;
@@ -39,12 +36,12 @@ public class GameBattleShipTest {
         mainPage.clickPlay();
         Battlefield battlefield = new Battlefield(fieldWidth, fieldLength);
         Cell cellShot;
-        for (int i = 0; i < 40; i++) {
-            cellShot = battlefield.getRandomEmptyCell();
+        for (int i = 0; i < 100; i++) {
+            cellShot = battlefield.takeNextShot();
             cellShot = battlefield.takeShot(cellShot);
+            Logger.getInstance().info("CellOption x = " + cellShot.x + " y = " + cellShot.y + " is " + cellShot.option);
             battlefield.setCellOption(cellShot);
 
-            Logger.getInstance().info("CellOption x = " + cellShot.x + " y = " + cellShot.y + " is " + cellShot.option);
         }
     }
 

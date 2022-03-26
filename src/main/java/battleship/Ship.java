@@ -1,15 +1,44 @@
 package battleship;
 
-public class Ship {
-    private byte lengthShip;
-    private ShipStatus status;
+import java.util.ArrayList;
 
-    public Ship(byte lengthShip) {
-        this.lengthShip = lengthShip;
+public class Ship {
+    private ShipStatus status;
+    private ArrayList<Cell> cellsShip = new ArrayList<>();
+    private TypeShip typeShip;
+
+    public Ship() {
         status = ShipStatus.living;
     }
 
     public ShipStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(ShipStatus status) {
+        this.status = status;
+    }
+
+    public void addCellShip(Cell cell) {
+        cellsShip.add(cell);
+    }
+
+    public ArrayList<Cell> getCellsShip() {
+        return cellsShip;
+    }
+
+    public TypeShip getTypeShip() {
+        return typeShip;
+    }
+
+    public void setTypeShip(TypeShip typeShip) {
+        this.typeShip = typeShip;
+    }
+
+    public void setInitialState() {
+        status = ShipStatus.living;
+        setTypeShip(TypeShip.single);
+        cellsShip = new ArrayList<>();
+
     }
 }

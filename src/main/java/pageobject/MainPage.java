@@ -41,12 +41,12 @@ public class MainPage extends Form {
 
     public Cell clickCell(Cell cellClick) {
         IButton cell = getElementFactory().getButton(
-                By.xpath(String.format(cellLocator, cellClick.x, cellClick.y)), "Cell");
+                By.xpath(String.format(cellLocator, cellClick.y, cellClick.x)), "Cell");
         if (cell.getAttribute("class").contains(CellOption.empty.toString())) {
             cell.state().waitForClickable();
             cell.clickAndWait();
             IButton cellAfterClick = getElementFactory().getButton(
-                    By.xpath(String.format(cellLocator, cellClick.x, cellClick.y)), "Cell after click");
+                    By.xpath(String.format(cellLocator, cellClick.y, cellClick.x)), "Cell after click");
             return getCellOption(cellClick, cellAfterClick.getAttribute("class"));
 
         } else {
