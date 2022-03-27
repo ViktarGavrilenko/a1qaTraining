@@ -23,6 +23,32 @@ public class MainPage extends Form {
     private final ITextBox battlefieldOfRival = getElementFactory().getTextBox(
             By.xpath("//div[@class='battlefield battlefield__rival']"), "Battlefield of rival");
 
+    private final String statusGame = "//div[contains(@class,'%s') and not(contains(@class,'none'))]";
+
+/*     private final ITextBox gameLose = getElementFactory().getTextBox
+            (By.xpath("//div[contains(@class,'game-over-lose') and not(contains(@class,'none'))]"),
+                    "Game is lose");
+    private final ITextBox gameWin = getElementFactory().getTextBox
+            (By.xpath("//div[contains(@class,'game-over-win') and not(contains(@class,'none'))]"),
+                    "Game is win");
+    private final ITextBox rivalLeave = getElementFactory().getTextBox
+            (By.xpath("//div[contains(@class,'rival-leave') and not(contains(@class,'none'))]"),
+                    "Rival is gone");
+    private final ITextBox serverError = getElementFactory().getTextBox
+            (By.xpath("//div[contains(@class,'server-error') and not(contains(@class,'none'))]"),
+                    "Server is not available");
+    private final ITextBox gameError = getElementFactory().getTextBox
+            (By.xpath("//div[contains(@class,'game-error') and not(contains(@class,'none'))]"),
+                    "Unexpected error");
+
+    private final ITextBox onMove = getElementFactory().getTextBox
+            (By.xpath("//div[contains(@class,'move-on') and not(contains(@class,'none'))]"),
+                    "Move on");
+    private final ITextBox offMove = getElementFactory().getTextBox
+            (By.xpath("//div[contains(@class,'move-off') and not(contains(@class,'none'))]"),
+                    "Move off");*/
+
+
     public MainPage() {
         super(By.cssSelector("header h1.logo"), "Name of the game");
     }
@@ -66,5 +92,24 @@ public class MainPage extends Form {
             cellClick.option = CellOption.miss;
         }
         return cellClick;
+    }
+
+    public boolean getStatusGame() {
+        ITextBox status = getElementFactory().getTextBox
+                (By.xpath(String.format(statusGame, Notification.MOVE_ON)), "Game status");
+        status.state().waitForDisplayed(Duration.ofSeconds(1));
+
+        for (Notification notification : Notification.values()) {
+            Logger.getInstance().info(notification.getTextNotification());
+
+            ITextBox statuses = getElementFactory().getTextBox
+                    (By.xpath(String.format(statusGame, notification.getTextNotification())), "Game status");
+
+            if (statuses.state().isDisplayed()) {
+                Logger.getInstance().info("--------Game status is " + notification.getTextNotification());
+
+            }
+        }
+        return false;
     }
 }

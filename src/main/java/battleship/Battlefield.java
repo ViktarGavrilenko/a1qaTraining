@@ -13,13 +13,12 @@ public class Battlefield {
     private final MainPage mainPage = new MainPage();
     private Cell nextShot;
 
-    private final Ship woundedShip = new Ship();
-    private final ArrayList<Ship> ships = new ArrayList<>();
+    private Ship woundedShip = new Ship();
+    private final ArrayList<Ship> shipsKilled = new ArrayList<>();
     private static final ISettingsFile TEST_DATA_FILE = new JsonSettingsFile("testData.json");
 
-    private static final byte fieldWidth = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldWidth").toString());
-    private static final byte fieldLength = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldLength").toString());
-
+    private static final byte FIELD_WIDTH = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldWidth").toString());
+    private static final byte FIELD_LENGTH = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldLength").toString());
 
     public Battlefield(int x, int y) {
         field = new Cell[10][10];
@@ -34,6 +33,10 @@ public class Battlefield {
         }
     }
 
+    public int getNumberKilledShips() {
+        return shipsKilled.size();
+    }
+
     public Cell takeShot(Cell cell) {
         if (mainPage.isBattlefieldOfRivalClick()) {
             return mainPage.clickCell(cell);
@@ -44,6 +47,7 @@ public class Battlefield {
     }
 
     public void setCellOption(Cell cell) {
+        Logger.getInstance().info("setCellOption");
         nextShot = null;
         field[cell.x][cell.y].option = cell.option;
         if (cell.option.equals(CellOption.hit) && woundedShip.getStatus().equals(ShipStatus.living)) {
@@ -83,10 +87,11 @@ public class Battlefield {
     public Cell getRandomEmptyCell() {
         int x, y;
         do {
-            x = new Random().nextInt(fieldWidth);
-            y = new Random().nextInt(fieldLength);
+            x = new Random().nextInt(FIELD_WIDTH);
+            y = new Random().nextInt(FIELD_LENGTH);
         }
         while (!field[x][y].option.equals(CellOption.empty));
+        Logger.getInstance().info("RandomEmptyCell x = " + x + " y = " + y);
         return field[x][y];
     }
 
@@ -198,14 +203,16 @@ public class Battlefield {
     }
 
     public void setNextCell(Ship ship, Cell cell) {
-        if (ship.getTypeShip() == TypeShip.vertical) {
-            nextShot = takeCellVerticalShot(cell);
-        }
-        if (ship.getTypeShip() == TypeShip.horizontal) {
-            nextShot = takeCellHorizontalShot(cell);
-        }
-        if (ship.getTypeShip() == TypeShip.single) {
-            nextShot = takeCellWoundedShip(cell);
+        switch (ship.getTypeShip()) {
+            case vertical:
+                nextShot = takeCellVerticalShot(cell);
+                break;
+            case horizontal:
+                nextShot = takeCellHorizontalShot(cell);
+                break;
+            default:
+                nextShot = takeCellWoundedShip(cell);
+                break;
         }
     }
 
@@ -232,13 +239,41 @@ public class Battlefield {
         }
     }
 
-    public Cell updateDataAfterKillShip (Ship woundedShip) {
-        ships.add(woundedShip);
+    public Cell updateDataAfterKillShip(Ship woundedShip) {
+        shipsKilled.add(woundedShip);
+        Logger.getInstance().info("Number killed ships are " + shipsKilled.size());
+        for (Cell cell : woundedShip.getCellsShip()) {
+            Logger.getInstance().info("woundedShip x = " + cell.x + " y " + cell.y + " option " + cell.option);
+        }
+        Logger.getInstance().info("Killed woundedShip is from " + woundedShip.getCellsShip().size() + " cell");
         setMissAroundShip(woundedShip);
-        woundedShip.setInitialState();
-        for (Ship ship:ships) {
-            Logger.getInstance().info("Killed ships " + ship.getCellsShip().size() + " cell");
+        this.woundedShip = new Ship();
+        for (Ship ship : shipsKilled) {
+            Logger.getInstance().info("Killed ship is from " + ship.getCellsShip().size() + " cell");
+            for (Cell cell : ship.getCellsShip()) {
+                Logger.getInstance().info("x = " + cell.x + " y = " + cell.y + " option " + cell.option);
+            }
         }
         return getRandomEmptyCell();
+    }
+
+    public void getField() {
+        for (int i = 0; i < field.length; i++) {
+            StringBuilder str = new StringBuilder();
+            for (int j = 0; j < field[i].length; j++) {
+                switch (field[j][i].option){
+                    case empty:
+                        str.append("| ");
+                        break;
+                    case hit:
+                        str.append("|x");
+                        break;
+                    case miss:
+                        str.append("|-");
+                        break;
+                }
+            }
+            Logger.getInstance().info(str.append("|").toString());
+        }
     }
 }

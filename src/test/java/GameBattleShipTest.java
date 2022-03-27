@@ -19,6 +19,7 @@ public class GameBattleShipTest {
             Integer.parseInt(TEST_DATA_FILE.getValue("/numberTimesRandomly").toString());
     private static final byte fieldWidth = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldWidth").toString());
     private static final byte fieldLength = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldLength").toString());
+    private static final int NUMBER_SHIPS = Integer.parseInt(TEST_DATA_FILE.getValue("/numberShips").toString());
 
 
     @BeforeMethod
@@ -36,12 +37,19 @@ public class GameBattleShipTest {
         mainPage.clickPlay();
         Battlefield battlefield = new Battlefield(fieldWidth, fieldLength);
         Cell cellShot;
-        for (int i = 0; i < 100; i++) {
+
+        while (battlefield.getNumberKilledShips() != NUMBER_SHIPS) {
+            Logger.getInstance().info("----------Start shot----------------");
             cellShot = battlefield.takeNextShot();
             cellShot = battlefield.takeShot(cellShot);
             Logger.getInstance().info("CellOption x = " + cellShot.x + " y = " + cellShot.y + " is " + cellShot.option);
             battlefield.setCellOption(cellShot);
-
+            battlefield.getField();
+            Logger.getInstance().info("----------Finish shot----------------");
+            if (mainPage.getStatusGame()) {
+                Logger.getInstance().info("You are WIN");
+                break;
+            }
         }
     }
 

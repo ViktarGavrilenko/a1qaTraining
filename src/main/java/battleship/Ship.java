@@ -39,6 +39,5 @@ public class Ship {
         status = ShipStatus.living;
         setTypeShip(TypeShip.single);
         cellsShip = new ArrayList<>();
-
     }
 }
