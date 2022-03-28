@@ -7,8 +7,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pageobject.MainPage;
+import pageobject.Notification;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
+import static org.testng.Assert.assertTrue;
 import static utils.ArithmeticUtils.generateRandomIntUpToMaxWithoutZero;
 
 public class GameBattleShipTest {
@@ -38,7 +40,8 @@ public class GameBattleShipTest {
         Battlefield battlefield = new Battlefield(fieldWidth, fieldLength);
         Cell cellShot;
 
-        while (battlefield.getNumberKilledShips() != NUMBER_SHIPS) {
+        while (battlefield.getNumberKilledShips() != NUMBER_SHIPS
+                && mainPage.isStatusGame(Notification.MOVE_ON.getTextNotification())) {
             Logger.getInstance().info("----------Start shot----------------");
             cellShot = battlefield.takeNextShot();
             cellShot = battlefield.takeShot(cellShot);
@@ -46,15 +49,13 @@ public class GameBattleShipTest {
             battlefield.setCellOption(cellShot);
             battlefield.getField();
             Logger.getInstance().info("----------Finish shot----------------");
-            if (mainPage.getStatusGame()) {
-                Logger.getInstance().info("You are WIN");
-                break;
-            }
         }
+        assertTrue(mainPage.isStatusGame(Notification.WIN.getTextNotification()),
+                "The game is over because " + mainPage.getLastGameStatus());
     }
 
     @AfterMethod
     public void afterTest() {
-//        getBrowser().quit();
+        getBrowser().quit();
     }
 }

@@ -34,10 +34,4 @@ public class Ship {
     public void setTypeShip(TypeShip typeShip) {
         this.typeShip = typeShip;
     }
-
-    public void setInitialState() {
-        status = ShipStatus.living;
-        setTypeShip(TypeShip.single);
-        cellsShip = new ArrayList<>();
-    }
 }

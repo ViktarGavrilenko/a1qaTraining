@@ -1,12 +1,9 @@
 package battleship;
 
 import aquality.selenium.core.logging.Logger;
-import aquality.selenium.core.utilities.ISettingsFile;
-import aquality.selenium.core.utilities.JsonSettingsFile;
 import pageobject.MainPage;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Battlefield {
     private final Cell[][] field;
@@ -15,10 +12,6 @@ public class Battlefield {
 
     private Ship woundedShip = new Ship();
     private final ArrayList<Ship> shipsKilled = new ArrayList<>();
-    private static final ISettingsFile TEST_DATA_FILE = new JsonSettingsFile("testData.json");
-
-    private static final byte FIELD_WIDTH = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldWidth").toString());
-    private static final byte FIELD_LENGTH = Byte.parseByte(TEST_DATA_FILE.getValue("/fieldLength").toString());
 
     public Battlefield(int x, int y) {
         field = new Cell[10][10];
@@ -78,21 +71,10 @@ public class Battlefield {
 
     public Cell takeNextShot() {
         if (nextShot == null) {
-            return getRandomEmptyCell();
+            return getBetterCell();
         } else {
             return nextShot;
         }
-    }
-
-    public Cell getRandomEmptyCell() {
-        int x, y;
-        do {
-            x = new Random().nextInt(FIELD_WIDTH);
-            y = new Random().nextInt(FIELD_LENGTH);
-        }
-        while (!field[x][y].option.equals(CellOption.empty));
-        Logger.getInstance().info("RandomEmptyCell x = " + x + " y = " + y);
-        return field[x][y];
     }
 
     public Cell takeCellWoundedShip(Cell hitCell) {
@@ -254,14 +236,14 @@ public class Battlefield {
                 Logger.getInstance().info("x = " + cell.x + " y = " + cell.y + " option " + cell.option);
             }
         }
-        return getRandomEmptyCell();
+        return getBetterCell();
     }
 
     public void getField() {
         for (int i = 0; i < field.length; i++) {
             StringBuilder str = new StringBuilder();
             for (int j = 0; j < field[i].length; j++) {
-                switch (field[j][i].option){
+                switch (field[j][i].option) {
                     case empty:
                         str.append("| ");
                         break;
@@ -274,6 +256,138 @@ public class Battlefield {
                 }
             }
             Logger.getInstance().info(str.append("|").toString());
+        }
+    }
+
+    public Cell getBetterCell() {
+        Cell betterCell = new Cell();
+        int numberEmptyCell;
+        int numberDiagonalEmptyCell;
+        int maxNumberEmptyCell = 0;
+        int maxNumberDiagonalEmptyCell = 0;
+        for (Cell[] cells : field) {
+            for (Cell cell : cells) {
+                if (cell.option.equals(CellOption.empty)) {
+                    if (betterCell.x == 0 && betterCell.y == 0) {
+                        betterCell = cell;
+                    }
+                    numberEmptyCell = getNumberEmptyCellsAround(cell, getLiveShipWithMaxNumberDecks());
+                    Logger.getInstance().info("CELL x=" + cell.x + " y=" + cell.y + " numberEmptyCell= " + numberEmptyCell);
+                    if (numberEmptyCell > maxNumberEmptyCell) {
+                        betterCell = cell;
+                        maxNumberEmptyCell = numberEmptyCell;
+                        maxNumberDiagonalEmptyCell = getNumberEmptyDiagonalCell(cell);
+                        Logger.getInstance().info("maxNumberDiagonalEmptyCell =" + maxNumberDiagonalEmptyCell);
+                    }
+                    if (numberEmptyCell == maxNumberEmptyCell) {
+                        numberDiagonalEmptyCell = getNumberEmptyDiagonalCell(cell);
+                        Logger.getInstance().info("maxNumberDiagonalEmptyCell =" + maxNumberDiagonalEmptyCell);
+                        if (numberDiagonalEmptyCell > maxNumberDiagonalEmptyCell) {
+                            betterCell = cell;
+                            maxNumberEmptyCell = numberEmptyCell;
+                            maxNumberDiagonalEmptyCell = numberDiagonalEmptyCell;
+                        }
+                    }
+                }
+            }
+        }
+        Logger.getInstance().info("BetterCell x = " + betterCell.x + " y = " + betterCell.y);
+        return betterCell;
+    }
+
+    public int getNumberEmptyCellsOnLeft(Cell cell, int maxLength) {
+        int count = 0;
+        for (int i = 1; i < maxLength; i++) {
+            if (cell.x - i >= 0 && field[cell.x - i][cell.y].option.equals(CellOption.empty)) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count;
+    }
+
+    public int getNumberEmptyCellsOnRight(Cell cell, int maxLength) {
+        int count = 0;
+        for (int i = 1; i < maxLength; i++) {
+            if (cell.x + i < 10 && field[cell.x + i][cell.y].option.equals(CellOption.empty)) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count;
+    }
+
+    public int getNumberEmptyCellsOnDown(Cell cell, int maxLength) {
+        int count = 0;
+        for (int i = 1; i < maxLength; i++) {
+            if (cell.y + i < 10 && field[cell.x][cell.y + i].option.equals(CellOption.empty)) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count;
+    }
+
+    public int getNumberEmptyCellsOnUp(Cell cell, int maxLength) {
+        int count = 0;
+        for (int i = 1; i < maxLength; i++) {
+            if (cell.y - i >= 0 && field[cell.x][cell.y - i].option.equals(CellOption.empty)) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count;
+    }
+
+    public int getNumberEmptyCellsAround(Cell cell, int maxLength) {
+        return getNumberEmptyCellsOnLeft(cell, maxLength) + getNumberEmptyCellsOnRight(cell, maxLength) +
+                getNumberEmptyCellsOnDown(cell, maxLength) + getNumberEmptyCellsOnUp(cell, maxLength);
+    }
+
+    public int getNumberEmptyDiagonalCell(Cell cell) {
+        int count = 0;
+        if (cell.x - 1 >= 0 && cell.y - 1 >= 0 && field[cell.x - 1][cell.y - 1].option.equals(CellOption.empty)) {
+            count++;
+        }
+        if (cell.x + 1 < field.length && cell.y - 1 >= 0 && field[cell.x + 1][cell.y - 1].option.equals(CellOption.empty)) {
+            count++;
+        }
+        if (cell.x + 1 < field.length && cell.y + 1 < field[0].length && field[cell.x + 1][cell.y + 1].option.equals(CellOption.empty)) {
+            count++;
+        }
+        if (cell.x - 1 >= 0 && cell.y + 1 < field[0].length && field[cell.x - 1][cell.y + 1].option.equals(CellOption.empty)) {
+            count++;
+        }
+        return count;
+    }
+
+    public int getLiveShipWithMaxNumberDecks() {
+        int numberFourDeck = 0;
+        int numberThreeDeck = 0;
+
+        for (Ship ship : shipsKilled) {
+            switch (ship.getCellsShip().size()) {
+                case 4:
+                    numberFourDeck++;
+                    break;
+                case 3:
+                    numberThreeDeck++;
+                    break;
+            }
+        }
+
+        if (numberFourDeck == 1) {
+            if (numberThreeDeck == 2) {
+                return 2;
+            } else {
+                return 3;
+            }
+        } else {
+            return 4;
         }
     }
 }
