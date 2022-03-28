@@ -263,14 +263,11 @@ public class Battlefield {
         Cell betterCell = new Cell();
         int numberEmptyCell;
         int numberDiagonalEmptyCell;
-        int maxNumberEmptyCell = 0;
+        int maxNumberEmptyCell = -1;
         int maxNumberDiagonalEmptyCell = 0;
         for (Cell[] cells : field) {
             for (Cell cell : cells) {
                 if (cell.option.equals(CellOption.empty)) {
-                    if (betterCell.x == 0 && betterCell.y == 0) {
-                        betterCell = cell;
-                    }
                     numberEmptyCell = getNumberEmptyCellsAround(cell, getLiveShipWithMaxNumberDecks());
                     Logger.getInstance().info("CELL x=" + cell.x + " y=" + cell.y + " numberEmptyCell= " + numberEmptyCell);
                     if (numberEmptyCell > maxNumberEmptyCell) {
@@ -284,7 +281,6 @@ public class Battlefield {
                         Logger.getInstance().info("maxNumberDiagonalEmptyCell =" + maxNumberDiagonalEmptyCell);
                         if (numberDiagonalEmptyCell > maxNumberDiagonalEmptyCell) {
                             betterCell = cell;
-                            maxNumberEmptyCell = numberEmptyCell;
                             maxNumberDiagonalEmptyCell = numberDiagonalEmptyCell;
                         }
                     }
