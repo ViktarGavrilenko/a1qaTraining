@@ -40,32 +40,39 @@ public class Battlefield {
     }
 
     public void setCellOption(Cell cell) {
-        Logger.getInstance().info("setCellOption");
+        Logger.getInstance().info("setCellOption x=" + cell.x + " y=" + cell.y);
         nextShot = null;
         field[cell.x][cell.y].option = cell.option;
-        if (cell.option.equals(CellOption.hit) && woundedShip.getStatus().equals(ShipStatus.living)) {
-            Logger.getInstance().info("First shot");
-            woundedShip.setStatus(ShipStatus.wounded);
-            woundedShip.addCellShip(cell);
-            woundedShip.setTypeShip(TypeShip.single);
-            setNextCell(woundedShip, cell);
-            return;
-        }
-        if (cell.option.equals(CellOption.hit) && woundedShip.getStatus().equals(ShipStatus.wounded)) {
-            Logger.getInstance().info("Wounded ship with HIT shot");
-            if (woundedShip.getCellsShip().get(0).x == cell.x) {
-                woundedShip.setTypeShip(TypeShip.vertical);
-            } else {
-                woundedShip.setTypeShip(TypeShip.horizontal);
-            }
-            woundedShip.addCellShip(cell);
-            setNextCell(woundedShip, cell);
-            return;
-        }
-        if (cell.option.equals(CellOption.miss) && woundedShip.getStatus().equals(ShipStatus.wounded)) {
-            Logger.getInstance().info("Wounded ship with MISS shot");
-            Cell lastHitCell = woundedShip.getCellsShip().get(woundedShip.getCellsShip().size() - 1);
-            setNextCell(woundedShip, lastHitCell);
+        switch (cell.option) {
+            case hit:
+                switch (woundedShip.getStatus()) {
+                    case wounded:
+                        Logger.getInstance().info("Wounded ship with HIT shot");
+                        if (woundedShip.getCellsShip().get(0).x == cell.x) {
+                            woundedShip.setTypeShip(TypeShip.vertical);
+                        } else {
+                            woundedShip.setTypeShip(TypeShip.horizontal);
+                        }
+                        break;
+                    case living:
+                        Logger.getInstance().info("First shot");
+                        woundedShip.setStatus(ShipStatus.wounded);
+                        woundedShip.setTypeShip(TypeShip.single);
+                        break;
+                }
+                woundedShip.addCellShip(cell);
+                setNextCell(woundedShip, cell);
+                break;
+            case miss:
+                if (woundedShip.getStatus().equals(ShipStatus.wounded)) {
+                    Logger.getInstance().info("Wounded ship with MISS shot");
+                    Cell lastHitCell = woundedShip.getCellsShip().get(woundedShip.getCellsShip().size() - 1);
+                    setNextCell(woundedShip, lastHitCell);
+                }
+                break;
+            case empty:
+                nextShot = cell;
+                break;
         }
     }
 
@@ -269,16 +276,13 @@ public class Battlefield {
             for (Cell cell : cells) {
                 if (cell.option.equals(CellOption.empty)) {
                     numberEmptyCell = getNumberEmptyCellsAround(cell, getLiveShipWithMaxNumberDecks());
-                    Logger.getInstance().info("CELL x=" + cell.x + " y=" + cell.y + " numberEmptyCell= " + numberEmptyCell);
                     if (numberEmptyCell > maxNumberEmptyCell) {
                         betterCell = cell;
                         maxNumberEmptyCell = numberEmptyCell;
                         maxNumberDiagonalEmptyCell = getNumberEmptyDiagonalCell(cell);
-                        Logger.getInstance().info("maxNumberDiagonalEmptyCell =" + maxNumberDiagonalEmptyCell);
                     }
                     if (numberEmptyCell == maxNumberEmptyCell) {
                         numberDiagonalEmptyCell = getNumberEmptyDiagonalCell(cell);
-                        Logger.getInstance().info("maxNumberDiagonalEmptyCell =" + maxNumberDiagonalEmptyCell);
                         if (numberDiagonalEmptyCell > maxNumberDiagonalEmptyCell) {
                             betterCell = cell;
                             maxNumberDiagonalEmptyCell = numberDiagonalEmptyCell;
