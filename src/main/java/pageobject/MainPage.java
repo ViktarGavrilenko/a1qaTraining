@@ -102,6 +102,7 @@ public class MainPage extends Form {
                 }
             }
         }
+        Logger.getInstance().info("Game ended: '" + finalMessage);
         return finalMessage;
     }
 
