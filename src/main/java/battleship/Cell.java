@@ -7,7 +7,7 @@ public class Cell {
     public int y;
     public CellOption option;
 
-    Cell () {
+    Cell() {
         option = CellOption.empty;
     }
 

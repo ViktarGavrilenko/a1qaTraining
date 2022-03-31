@@ -71,15 +71,38 @@ public class MainPage extends Form {
     }
 
     public String getLastGameStatus() {
+        String finalMessage = "Unknown error";
         for (Notification notification : Notification.values()) {
             ITextBox statuses = getElementFactory().getTextBox
                     (By.xpath(String.format(statusGame, notification.getTextNotification())), "Game status");
 
             if (statuses.state().isDisplayed()) {
-                return notification.getTextNotification();
+                switch (notification) {
+                    case LOSE:
+                        finalMessage = "You LOSE";
+                        break;
+                    case WIN:
+                        finalMessage = "You WIN";
+                        break;
+                    case GAME_ERROR:
+                        finalMessage = "GAME ERROR";
+                        break;
+                    case RIVAL_LEAVE:
+                        finalMessage = "Opponent left the game";
+                        break;
+                    case MOVE_OFF:
+                        finalMessage = "Opponent takes a long time to move";
+                        break;
+                    case MOVE_ON:
+                        finalMessage = "You take a long time to make a move";
+                        break;
+                    case SERVER_ERROR:
+                        finalMessage = "SERVER ERROR";
+                        break;
+                }
             }
         }
-        return "Unknown error";
+        return finalMessage;
     }
 
     public boolean isStatusGame(String waitStatus) {

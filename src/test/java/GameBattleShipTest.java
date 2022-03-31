@@ -51,7 +51,7 @@ public class GameBattleShipTest {
             Logger.getInstance().info("----------Finish shot----------------");
         }
         assertTrue(mainPage.isStatusGame(Notification.WIN.getTextNotification()),
-                "The game is over because " + mainPage.getLastGameStatus());
+                "The game is over because '" + mainPage.getLastGameStatus() + "'");
     }
 
     @AfterMethod

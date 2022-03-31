@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Ship {
     private ShipStatus status;
-    private ArrayList<Cell> cellsShip = new ArrayList<>();
+    private final ArrayList<Cell> cellsShip = new ArrayList<>();
     private TypeShip typeShip;
 
     public Ship() {

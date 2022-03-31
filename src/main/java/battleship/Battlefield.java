@@ -4,6 +4,7 @@ import aquality.selenium.core.logging.Logger;
 import pageobject.MainPage;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Battlefield {
     private final Cell[][] field;
@@ -61,13 +62,13 @@ public class Battlefield {
                         break;
                 }
                 woundedShip.addCellShip(cell);
-                setNextCell(woundedShip, cell);
+                nextShot = calculateNextBestCellWoundedShip(cell);
                 break;
             case miss:
                 if (woundedShip.getStatus().equals(ShipStatus.wounded)) {
                     Logger.getInstance().info("Wounded ship with MISS shot");
                     Cell lastHitCell = woundedShip.getCellsShip().get(woundedShip.getCellsShip().size() - 1);
-                    setNextCell(woundedShip, lastHitCell);
+                    nextShot = calculateNextBestCellWoundedShip(lastHitCell);
                 }
                 break;
             case empty:
@@ -77,135 +78,10 @@ public class Battlefield {
     }
 
     public Cell takeNextShot() {
-        if (nextShot == null) {
-            return getBetterCell();
-        } else {
-            return nextShot;
-        }
+        return Objects.requireNonNullElseGet(nextShot, this::getBetterCell);
     }
 
-    public Cell takeCellWoundedShip(Cell hitCell) {
-        Logger.getInstance().info("takeCellWoundedShip");
-        if (takeCellLeftShot(hitCell).equals(hitCell)) {
-            if (takeCellRightShot(hitCell).equals(hitCell)) {
-                if (takeCellDownShot(hitCell).equals(hitCell)) {
-                    if (takeCellUpShot(hitCell).equals(hitCell)) {
-                        return updateDataAfterKillShip(woundedShip);
-                    } else {
-                        return takeCellUpShot(hitCell);
-                    }
-                } else {
-                    return takeCellDownShot(hitCell);
-                }
-            } else {
-                return takeCellRightShot(hitCell);
-            }
-        } else {
-            return takeCellLeftShot(hitCell);
-        }
-    }
-
-    public Cell takeCellLeftShot(Cell hitCell) {
-        Logger.getInstance().info("takeCellLeftShot");
-        if (hitCell.x != 0) {
-            if (field[hitCell.x - 1][hitCell.y].option.equals(CellOption.empty)) {
-                return field[hitCell.x - 1][hitCell.y];
-            } else {
-                return hitCell;
-            }
-        } else {
-            return hitCell;
-        }
-    }
-
-    public Cell takeCellRightShot(Cell hitCell) {
-        Logger.getInstance().info("takeCellRightShot");
-        if (hitCell.x != field.length - 1) {
-            if (field[hitCell.x + 1][hitCell.y].option.equals(CellOption.empty)) {
-                return field[hitCell.x + 1][hitCell.y];
-            } else {
-                return hitCell;
-            }
-        } else {
-            return hitCell;
-        }
-    }
-
-    public Cell takeCellDownShot(Cell hitCell) {
-        Logger.getInstance().info("takeCellDownShot");
-        if (hitCell.y != field[0].length - 1) {
-            if (field[hitCell.x][hitCell.y + 1].option.equals(CellOption.empty)) {
-                return field[hitCell.x][hitCell.y + 1];
-            } else {
-                return hitCell;
-            }
-        } else {
-            return hitCell;
-        }
-    }
-
-    public Cell takeCellUpShot(Cell hitCell) {
-        Logger.getInstance().info("takeCellUpShot");
-        if (hitCell.y != 0) {
-            if (field[hitCell.x][hitCell.y - 1].option.equals(CellOption.empty)) {
-                return field[hitCell.x][hitCell.y - 1];
-            } else {
-                return hitCell;
-            }
-        } else {
-            return hitCell;
-        }
-    }
-
-    public Cell takeCellHorizontalShot(Cell hitCell) {
-        Logger.getInstance().info("takeCellHorizontalShot");
-        if (takeCellLeftShot(hitCell).equals(hitCell)) {
-            if (takeCellRightShot(hitCell).equals(hitCell)) {
-                if (hitCell.equals(woundedShip.getCellsShip().get(0))) {
-                    return updateDataAfterKillShip(woundedShip);
-                } else {
-                    return takeCellHorizontalShot(woundedShip.getCellsShip().get(0));
-                }
-            } else {
-                return takeCellRightShot(hitCell);
-            }
-        } else {
-            return takeCellLeftShot(hitCell);
-        }
-    }
-
-    public Cell takeCellVerticalShot(Cell hitCell) {
-        Logger.getInstance().info("takeCellVerticalShot");
-        if (takeCellDownShot(hitCell).equals(hitCell)) {
-            if (takeCellUpShot(hitCell).equals(hitCell)) {
-                if (hitCell.equals(woundedShip.getCellsShip().get(0))) {
-                    return updateDataAfterKillShip(woundedShip);
-                } else {
-                    return takeCellVerticalShot(woundedShip.getCellsShip().get(0));
-                }
-            } else {
-                return takeCellUpShot(hitCell);
-            }
-        } else {
-            return takeCellDownShot(hitCell);
-        }
-    }
-
-    public void setNextCell(Ship ship, Cell cell) {
-        switch (ship.getTypeShip()) {
-            case vertical:
-                nextShot = takeCellVerticalShot(cell);
-                break;
-            case horizontal:
-                nextShot = takeCellHorizontalShot(cell);
-                break;
-            default:
-                nextShot = takeCellWoundedShip(cell);
-                break;
-        }
-    }
-
-    public void setMissAroundShip(Ship ship) {
+    private void setMissAroundShip(Ship ship) {
         for (Cell cell : ship.getCellsShip()) {
             setMissCell(cell.x - 1, cell.y - 1);
             setMissCell(cell.x, cell.y - 1);
@@ -218,7 +94,7 @@ public class Battlefield {
         }
     }
 
-    public void setMissCell(int x, int y) {
+    private void setMissCell(int x, int y) {
         if (0 <= x && x < 10) {
             if (0 <= y && y < 10) {
                 if (field[x][y].option == CellOption.empty) {
@@ -228,7 +104,7 @@ public class Battlefield {
         }
     }
 
-    public Cell updateDataAfterKillShip(Ship woundedShip) {
+    private Cell updateDataAfterKillShip(Ship woundedShip) {
         shipsKilled.add(woundedShip);
         Logger.getInstance().info("Number killed ships are " + shipsKilled.size());
         for (Cell cell : woundedShip.getCellsShip()) {
@@ -266,7 +142,7 @@ public class Battlefield {
         }
     }
 
-    public Cell getBetterCell() {
+    private Cell getBetterCell() {
         Cell betterCell = new Cell();
         int numberEmptyCell;
         int numberDiagonalEmptyCell;
@@ -295,7 +171,7 @@ public class Battlefield {
         return betterCell;
     }
 
-    public int getNumberEmptyCellsOnLeft(Cell cell, int maxLength) {
+    private int getNumberEmptyCellsOnLeft(Cell cell, int maxLength) {
         int count = 0;
         for (int i = 1; i < maxLength; i++) {
             if (cell.x - i >= 0 && field[cell.x - i][cell.y].option.equals(CellOption.empty)) {
@@ -307,10 +183,10 @@ public class Battlefield {
         return count;
     }
 
-    public int getNumberEmptyCellsOnRight(Cell cell, int maxLength) {
+    private int getNumberEmptyCellsOnRight(Cell cell, int maxLength) {
         int count = 0;
         for (int i = 1; i < maxLength; i++) {
-            if (cell.x + i < 10 && field[cell.x + i][cell.y].option.equals(CellOption.empty)) {
+            if (cell.x + i < field.length && field[cell.x + i][cell.y].option.equals(CellOption.empty)) {
                 count++;
             } else {
                 break;
@@ -319,10 +195,10 @@ public class Battlefield {
         return count;
     }
 
-    public int getNumberEmptyCellsOnDown(Cell cell, int maxLength) {
+    private int getNumberEmptyCellsOnDown(Cell cell, int maxLength) {
         int count = 0;
         for (int i = 1; i < maxLength; i++) {
-            if (cell.y + i < 10 && field[cell.x][cell.y + i].option.equals(CellOption.empty)) {
+            if (cell.y + i < field[0].length && field[cell.x][cell.y + i].option.equals(CellOption.empty)) {
                 count++;
             } else {
                 break;
@@ -331,7 +207,7 @@ public class Battlefield {
         return count;
     }
 
-    public int getNumberEmptyCellsOnUp(Cell cell, int maxLength) {
+    private int getNumberEmptyCellsOnUp(Cell cell, int maxLength) {
         int count = 0;
         for (int i = 1; i < maxLength; i++) {
             if (cell.y - i >= 0 && field[cell.x][cell.y - i].option.equals(CellOption.empty)) {
@@ -343,12 +219,12 @@ public class Battlefield {
         return count;
     }
 
-    public int getNumberEmptyCellsAround(Cell cell, int maxLength) {
+    private int getNumberEmptyCellsAround(Cell cell, int maxLength) {
         return getNumberEmptyCellsOnLeft(cell, maxLength) + getNumberEmptyCellsOnRight(cell, maxLength) +
                 getNumberEmptyCellsOnDown(cell, maxLength) + getNumberEmptyCellsOnUp(cell, maxLength);
     }
 
-    public int getNumberEmptyDiagonalCell(Cell cell) {
+    private int getNumberEmptyDiagonalCell(Cell cell) {
         int count = 0;
         if (cell.x - 1 >= 0 && cell.y - 1 >= 0 && field[cell.x - 1][cell.y - 1].option.equals(CellOption.empty)) {
             count++;
@@ -365,7 +241,7 @@ public class Battlefield {
         return count;
     }
 
-    public int getLiveShipWithMaxNumberDecks() {
+    private int getLiveShipWithMaxNumberDecks() {
         int numberFourDeck = 0;
         int numberThreeDeck = 0;
 
@@ -389,5 +265,84 @@ public class Battlefield {
         } else {
             return 4;
         }
+    }
+
+    private Cell calculateNextBestCellWoundedShip(Cell hitCell) {
+        Cell bestCell = null;
+        int numberEmptyCellAround;
+        int maxNumberEmptyCellAround = -1;
+
+        if (hitCell.y > 0 && !woundedShip.getTypeShip().equals(TypeShip.horizontal)) {
+            Cell upCell = field[hitCell.x][hitCell.y - 1];
+            if (upCell.option.equals(CellOption.empty)) {
+                numberEmptyCellAround = numberEmptyCellAroundNextShot(upCell, hitCell);
+                if (numberEmptyCellAround > maxNumberEmptyCellAround) {
+                    maxNumberEmptyCellAround = numberEmptyCellAround;
+                    bestCell = upCell;
+                }
+            }
+        }
+        if (hitCell.y < field[0].length - 1 && !woundedShip.getTypeShip().equals(TypeShip.horizontal)) {
+            Cell downCell = field[hitCell.x][hitCell.y + 1];
+            if (downCell.option.equals(CellOption.empty)) {
+                numberEmptyCellAround = numberEmptyCellAroundNextShot(downCell, hitCell);
+                if (numberEmptyCellAround > maxNumberEmptyCellAround) {
+                    maxNumberEmptyCellAround = numberEmptyCellAround;
+                    bestCell = downCell;
+                }
+            }
+        }
+        if (hitCell.x > 0 && !woundedShip.getTypeShip().equals(TypeShip.vertical)) {
+            Cell leftCell = field[hitCell.x - 1][hitCell.y];
+            if (leftCell.option.equals(CellOption.empty)) {
+                numberEmptyCellAround = numberEmptyCellAroundNextShot(leftCell, hitCell);
+                if (numberEmptyCellAround > maxNumberEmptyCellAround) {
+                    maxNumberEmptyCellAround = numberEmptyCellAround;
+                    bestCell = leftCell;
+                }
+            }
+        }
+        if (hitCell.x < field.length - 1 && !woundedShip.getTypeShip().equals(TypeShip.vertical)) {
+            Cell rightCell = field[hitCell.x + 1][hitCell.y];
+            if (rightCell.option.equals(CellOption.empty)) {
+                numberEmptyCellAround = numberEmptyCellAroundNextShot(rightCell, hitCell);
+                if (numberEmptyCellAround > maxNumberEmptyCellAround) {
+                    bestCell = rightCell;
+                }
+            }
+        }
+        if (bestCell == null) {
+            if (hitCell.equals(woundedShip.getCellsShip().get(0))) {
+                return updateDataAfterKillShip(woundedShip);
+            } else {
+                return calculateNextBestCellWoundedShip(woundedShip.getCellsShip().get(0));
+            }
+        }
+        return bestCell;
+    }
+
+    private int numberEmptyCellAroundNextShot(Cell nextCell, Cell hitCell) {
+        int x = nextCell.x - hitCell.x;
+        int y = nextCell.y - hitCell.y;
+        int numberEmpty = 0;
+
+        if (x + y > 0) {
+            for (int i = nextCell.x - 1 + x; i <= nextCell.x + 1; i++) {
+                for (int j = nextCell.y - 1 + y; j <= nextCell.y + 1; j++) {
+                    if (i >= 0 && j >= 0 && i < field[0].length && j < field[0].length && field[i][j].option.equals(CellOption.empty)) {
+                        numberEmpty++;
+                    }
+                }
+            }
+        } else {
+            for (int i = nextCell.x - 1; i <= nextCell.x + 1 + x; i++) {
+                for (int j = nextCell.y - 1; j <= nextCell.y + 1 + y; j++) {
+                    if (i >= 0 && j >= 0 && i < field[0].length && j < field[0].length && field[i][j].option.equals(CellOption.empty)) {
+                        numberEmpty++;
+                    }
+                }
+            }
+        }
+        return numberEmpty;
     }
 }
