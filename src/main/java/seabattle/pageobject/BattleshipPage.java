@@ -1,11 +1,11 @@
-package pageobject;
+package seabattle.pageobject;
 
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.elements.interfaces.IButton;
 import aquality.selenium.elements.interfaces.ITextBox;
 import aquality.selenium.forms.Form;
-import battleship.Cell;
-import battleship.CellOption;
+import seabattle.battleship.Cell;
+import seabattle.battleship.CellOption;
 import org.openqa.selenium.By;
 
 import java.time.Duration;

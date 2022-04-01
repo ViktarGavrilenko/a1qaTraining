@@ -1,13 +1,13 @@
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
-import battleship.Battlefield;
-import battleship.Cell;
+import seabattle.battleship.Battlefield;
+import seabattle.battleship.Cell;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pageobject.BattleshipPage;
-import pageobject.NotificationBattleship;
+import seabattle.pageobject.BattleshipPage;
+import seabattle.pageobject.NotificationBattleship;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static org.testng.Assert.assertTrue;

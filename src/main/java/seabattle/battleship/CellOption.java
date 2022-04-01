@@ -1,4 +1,4 @@
-package battleship;
+package seabattle.battleship;
 
 public enum CellOption {
     empty,

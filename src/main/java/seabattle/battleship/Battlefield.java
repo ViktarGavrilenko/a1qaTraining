@@ -1,7 +1,7 @@
-package battleship;
+package seabattle.battleship;
 
 import aquality.selenium.core.logging.Logger;
-import pageobject.BattleshipPage;
+import seabattle.pageobject.BattleshipPage;
 
 import java.util.ArrayList;
 import java.util.Objects;

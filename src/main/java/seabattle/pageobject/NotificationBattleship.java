@@ -1,4 +1,4 @@
-package pageobject;
+package seabattle.pageobject;
 
 public enum NotificationBattleship {
     LOSE("game-over-lose"),
