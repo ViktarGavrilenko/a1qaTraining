@@ -1,4 +1,4 @@
-package Cars.pageobject;
+package cars.pageobject;
 
 import aquality.selenium.elements.ElementType;
 import aquality.selenium.elements.interfaces.IButton;
@@ -6,7 +6,7 @@ import aquality.selenium.elements.interfaces.IComboBox;
 import aquality.selenium.elements.interfaces.ILink;
 import aquality.selenium.elements.interfaces.ITextBox;
 import aquality.selenium.forms.Form;
-import Cars.models.Car;
+import cars.models.Car;
 import org.openqa.selenium.By;
 
 public class Compare extends Form {

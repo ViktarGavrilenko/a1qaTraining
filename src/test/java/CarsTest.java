@@ -1,5 +1,5 @@
-import Cars.models.Car;
-import Cars.pageobject.*;
+import cars.models.Car;
+import cars.pageobject.*;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
 import org.testng.Assert;

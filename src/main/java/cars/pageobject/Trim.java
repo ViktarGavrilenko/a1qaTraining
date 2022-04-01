@@ -1,4 +1,4 @@
-package Cars.pageobject;
+package cars.pageobject;
 
 import aquality.selenium.elements.interfaces.IButton;
 import aquality.selenium.elements.interfaces.ITextBox;

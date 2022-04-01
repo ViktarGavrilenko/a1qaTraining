@@ -1,4 +1,4 @@
-package Cars.models;
+package cars.models;
 
 public class Car {
     public String make;

@@ -1,10 +1,10 @@
-package Cars.pageobject;
+package cars.pageobject;
 
 import aquality.selenium.elements.interfaces.IButton;
 import aquality.selenium.elements.interfaces.IComboBox;
 import aquality.selenium.elements.interfaces.ILink;
 import aquality.selenium.forms.Form;
-import Cars.models.Car;
+import cars.models.Car;
 import org.openqa.selenium.By;
 
 import static utils.ArithmeticUtils.generateRandomIntUpToMaxWithoutZero;
