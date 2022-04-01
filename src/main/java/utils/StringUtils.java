@@ -31,4 +31,13 @@ public class StringUtils {
     public static String getNameFileFromUrl(String url){
         return url.substring(url.lastIndexOf("/") + 1);
     }
+
+    public static String addSpaceBeforeParenthesis(String str) {
+        int numberParenthesis = str.indexOf("(");
+        if (numberParenthesis != -1) {
+            return str.substring(0, numberParenthesis) + " " + str.substring(numberParenthesis);
+        } else {
+            return str;
+        }
+    }
 }

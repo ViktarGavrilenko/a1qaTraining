@@ -4,5 +4,7 @@
   "fieldLength": 10,
   "numberShips": 10,
   "yearOld": 22,
-  "downloadsDir": "c:\\downloads"
+  "downloadsDir": "c:\\downloads",
+  "firstCar": 1,
+  "secondCar": 2
 }
