@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 
 import aquality.selenium.core.logging.Logger;
 

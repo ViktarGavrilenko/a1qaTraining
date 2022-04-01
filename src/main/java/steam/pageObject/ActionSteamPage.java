@@ -1,10 +1,10 @@
-package pageObject;
+package steam.pageObject;
 
 import aquality.selenium.elements.interfaces.ITextBox;
 import aquality.selenium.forms.Form;
 import org.openqa.selenium.By;
 
-public class Page extends Form {
+public class ActionSteamPage extends Form {
     private static final By TITLE_PAGE = By.cssSelector("h2.pageheader");
 
     private final ITextBox tabTopSellers =
@@ -14,7 +14,7 @@ public class Page extends Form {
 
     public TabContent tabContent;
 
-    public Page() {
+    public ActionSteamPage() {
         super(TITLE_PAGE, "Title page");
     }
 

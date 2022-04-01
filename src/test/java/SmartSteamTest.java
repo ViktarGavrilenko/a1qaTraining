@@ -2,17 +2,17 @@ import aquality.selenium.browser.AqualityServices;
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
-import model.Game;
+import steam.model.Game;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pageObject.*;
+import steam.pageObject.*;
 
 import java.io.File;
 
-import static Utils.BrowserUtils.getFileLength;
-import static Utils.BrowserUtils.isDownloadFile;
-import static Utils.StringUtils.getNameFileFromUrl;
+import static utils.BrowserUtils.getFileLength;
+import static utils.BrowserUtils.isDownloadFile;
+import static utils.StringUtils.getNameFileFromUrl;
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -20,7 +20,7 @@ import static org.testng.Assert.assertTrue;
 public class SmartSteamTest {
     private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
     private static final ISettingsFile TEST_DATA_FILE = new JsonSettingsFile("testData.json");
-    private static final String DEFAULT_URL = CONFIG_FILE.getValue("/mainPage").toString();
+    private static final String DEFAULT_URL = CONFIG_FILE.getValue("/steamPage").toString();
     private static final int YEAR_OLD = (int) TEST_DATA_FILE.getValue("/yearOld");
     private static final String DOWNLOADS_DIR = TEST_DATA_FILE.getValue("/downloadsDir").toString();
 
@@ -31,20 +31,20 @@ public class SmartSteamTest {
         Logger.getInstance().info("Check if the page is loaded " + DEFAULT_URL);
     }
 
-    @Test(description = "Test of accept cookies ")
-    public void testCookies() {
-        MainPage mainPage = new MainPage();
-        assertTrue(mainPage.state().isDisplayed(), "Main page not showing");
-        mainPage.clickLinkCategories();
-        mainPage.clickLinkActions();
-        Page page = new Page();
-        assertTrue(page.state().isDisplayed(), "Page not showing");
+    @Test(description = "Test SmartSteam")
+    public void testSmartSteam() {
+        SteamPage steamPage = new SteamPage();
+        assertTrue(steamPage.state().isDisplayed(), "Main page not showing");
+        steamPage.clickLinkCategories();
+        steamPage.clickLinkActions();
+        ActionSteamPage actionSteamPage = new ActionSteamPage();
+        assertTrue(actionSteamPage.state().isDisplayed(), "ActionSteam page not showing");
 
-        page.clickTabTopSeller();
-        assertTrue(page.isActiveTabTopSeller(), "TopSeller tab is not active");
+        actionSteamPage.clickTabTopSeller();
+        assertTrue(actionSteamPage.isActiveTabTopSeller(), "TopSeller tab is not active");
 
-        page.createTabContent();
-        Game gameFromTopSeller = page.tabContent.clickGameWithMaxDiscount();
+        actionSteamPage.createTabContent();
+        Game gameFromTopSeller = actionSteamPage.tabContent.clickGameWithMaxDiscount();
         AgeCheckFirstPage ageCheck = new AgeCheckFirstPage();
         AgeCheckSecondPage ageCheckSecond = new AgeCheckSecondPage();
 

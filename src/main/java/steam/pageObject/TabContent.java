@@ -1,15 +1,15 @@
-package pageObject;
+package steam.pageObject;
 
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.elements.interfaces.ITextBox;
 import aquality.selenium.forms.Form;
-import model.Game;
+import steam.model.Game;
 import org.openqa.selenium.By;
 
 import java.util.List;
 
-import static Utils.StringUtils.getNumberFromStr;
-import static Utils.StringUtils.getPriceFromStr;
+import static utils.StringUtils.getNumberFromStr;
+import static utils.StringUtils.getPriceFromStr;
 import static aquality.selenium.elements.ElementType.TEXTBOX;
 
 public class TabContent extends Form {

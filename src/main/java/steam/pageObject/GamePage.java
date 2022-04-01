@@ -1,12 +1,12 @@
-package pageObject;
+package steam.pageObject;
 
 import aquality.selenium.elements.interfaces.ITextBox;
 import aquality.selenium.forms.Form;
-import model.Game;
+import steam.model.Game;
 import org.openqa.selenium.By;
 
-import static Utils.StringUtils.getNumberFromStr;
-import static Utils.StringUtils.getPriceFromStr;
+import static utils.StringUtils.getNumberFromStr;
+import static utils.StringUtils.getPriceFromStr;
 
 public class GamePage extends Form {
     private final ITextBox gameDiscount = getElementFactory().getTextBox(

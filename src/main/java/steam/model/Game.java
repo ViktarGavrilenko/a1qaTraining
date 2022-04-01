@@ -1,4 +1,4 @@
-package model;
+package steam.model;
 
 import java.util.Objects;
 
