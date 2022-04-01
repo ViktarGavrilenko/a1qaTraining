@@ -1,6 +1,6 @@
 package pageobject;
 
-public enum Notification {
+public enum NotificationBattleship {
     LOSE("game-over-lose"),
     WIN("game-over-win"),
     RIVAL_LEAVE("rival-leave"),
@@ -9,10 +9,10 @@ public enum Notification {
     MOVE_ON("move-on"),
     MOVE_OFF("move-off");
 
-    private String textNotification;
+    private final String textNotification;
 
-    Notification(String title) {
-        this.textNotification = title;
+    NotificationBattleship(String textNotification) {
+        this.textNotification = textNotification;
     }
 
     public String getTextNotification() {

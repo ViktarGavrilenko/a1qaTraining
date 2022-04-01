@@ -1,14 +1,14 @@
 package battleship;
 
 import aquality.selenium.core.logging.Logger;
-import pageobject.MainPage;
+import pageobject.BattleshipPage;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Battlefield {
     private final Cell[][] field;
-    private final MainPage mainPage = new MainPage();
+    private final BattleshipPage battleshipPage = new BattleshipPage();
     private Cell nextShot;
 
     private Ship woundedShip = new Ship();
@@ -32,8 +32,8 @@ public class Battlefield {
     }
 
     public Cell takeShot(Cell cell) {
-        if (mainPage.isBattlefieldOfRivalClick()) {
-            return mainPage.clickCell(cell);
+        if (battleshipPage.isBattlefieldOfRivalClick()) {
+            return battleshipPage.clickCell(cell);
         } else {
             Logger.getInstance().error("Time is over");
             return null;
@@ -95,12 +95,8 @@ public class Battlefield {
     }
 
     private void setMissCell(int x, int y) {
-        if (0 <= x && x < 10) {
-            if (0 <= y && y < 10) {
-                if (field[x][y].option == CellOption.empty) {
-                    field[x][y].option = CellOption.miss;
-                }
-            }
+        if (0 <= x && x < 10 && 0 <= y && y < 10 && field[x][y].option == CellOption.empty) {
+            field[x][y].option = CellOption.miss;
         }
     }
 

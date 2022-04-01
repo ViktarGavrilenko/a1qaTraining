@@ -10,7 +10,7 @@ import org.openqa.selenium.By;
 
 import java.time.Duration;
 
-public class MainPage extends Form {
+public class BattleshipPage extends Form {
     private final IButton randomly =
             getElementFactory().getButton(By.cssSelector("li[class$='randomly'] span"), "Randomly");
 
@@ -25,7 +25,7 @@ public class MainPage extends Form {
 
     private final String statusGame = "//div[contains(@class,'%s') and not(contains(@class,'none'))]";
 
-    public MainPage() {
+    public BattleshipPage() {
         super(By.cssSelector("header h1.logo"), "Name of the game");
     }
 
@@ -42,18 +42,19 @@ public class MainPage extends Form {
     }
 
     public Cell clickCell(Cell cellClick) {
+        String classAttribute = "class";
         IButton cell = getElementFactory().getButton(
                 By.xpath(String.format(cellLocator, cellClick.y, cellClick.x)), "Cell");
-        if (cell.getAttribute("class").contains(CellOption.empty.toString())) {
+        if (cell.getAttribute(classAttribute).contains(CellOption.empty.toString())) {
             cell.state().waitForClickable();
             cell.clickAndWait();
             IButton cellAfterClick = getElementFactory().getButton(
                     By.xpath(String.format(cellLocator, cellClick.y, cellClick.x)), "Cell after click");
-            return getCellOption(cellClick, cellAfterClick.getAttribute("class"));
+            return getCellOption(cellClick, cellAfterClick.getAttribute(classAttribute));
 
         } else {
-            Logger.getInstance().error(cell.getAttribute("class"));
-            return getCellOption(cellClick, cell.getAttribute("class"));
+            Logger.getInstance().error(cell.getAttribute(classAttribute));
+            return getCellOption(cellClick, cell.getAttribute(classAttribute));
         }
     }
 
@@ -72,12 +73,12 @@ public class MainPage extends Form {
 
     public String getLastGameStatus() {
         String finalMessage = "Unknown error";
-        for (Notification notification : Notification.values()) {
+        for (NotificationBattleship notificationBattleship : NotificationBattleship.values()) {
             ITextBox statuses = getElementFactory().getTextBox
-                    (By.xpath(String.format(statusGame, notification.getTextNotification())), "Game status");
+                    (By.xpath(String.format(statusGame, notificationBattleship.getTextNotification())), "Game status");
 
             if (statuses.state().isDisplayed()) {
-                switch (notification) {
+                switch (notificationBattleship) {
                     case LOSE:
                         finalMessage = "You LOSE";
                         break;
