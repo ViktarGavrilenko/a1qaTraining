@@ -1,16 +1,16 @@
-package steam.pageObject;
+package steam.pageobject;
 
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.elements.interfaces.ITextBox;
 import aquality.selenium.forms.Form;
-import steam.model.Game;
 import org.openqa.selenium.By;
+import steam.model.Game;
 
 import java.util.List;
 
+import static aquality.selenium.elements.ElementType.TEXTBOX;
 import static utils.StringUtils.getNumberFromStr;
 import static utils.StringUtils.getPriceFromStr;
-import static aquality.selenium.elements.ElementType.TEXTBOX;
 
 public class TabContent extends Form {
     private final List<ITextBox> listDiscountGames = getElementFactory().findElements(By.xpath(

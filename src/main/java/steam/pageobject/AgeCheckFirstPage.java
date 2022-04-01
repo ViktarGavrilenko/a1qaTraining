@@ -1,4 +1,4 @@
-package steam.pageObject;
+package steam.pageobject;
 
 import aquality.selenium.elements.interfaces.IComboBox;
 import aquality.selenium.elements.interfaces.ILink;

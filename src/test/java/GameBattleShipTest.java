@@ -1,11 +1,11 @@
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
-import seabattle.battleship.Battlefield;
-import seabattle.battleship.Cell;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import seabattle.battleship.Battlefield;
+import seabattle.battleship.Cell;
 import seabattle.pageobject.BattleshipPage;
 import seabattle.pageobject.NotificationBattleship;
 
@@ -14,7 +14,7 @@ import static org.testng.Assert.assertTrue;
 import static utils.ArithmeticUtils.generateRandomIntUpToMaxWithoutZero;
 
 public class GameBattleShipTest {
-    private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("config.json");
+    private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
     private static final ISettingsFile TEST_DATA_FILE = new JsonSettingsFile("testData.json");
     private static final String DEFAULT_URL = CONFIG_FILE.getValue("/battleshipPage").toString();
     private static final Integer numberTimesRandomly =

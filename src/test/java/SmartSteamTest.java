@@ -2,20 +2,20 @@ import aquality.selenium.browser.AqualityServices;
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
-import steam.model.Game;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import steam.pageObject.*;
+import steam.model.Game;
+import steam.pageobject.*;
 
 import java.io.File;
 
-import static utils.BrowserUtils.getFileLength;
-import static utils.BrowserUtils.isDownloadFile;
-import static utils.StringUtils.getNameFileFromUrl;
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static utils.BrowserUtils.getFileLength;
+import static utils.BrowserUtils.isDownloadFile;
+import static utils.StringUtils.getNameFileFromUrl;
 
 public class SmartSteamTest {
     private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");

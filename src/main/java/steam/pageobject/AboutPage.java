@@ -1,4 +1,4 @@
-package steam.pageObject;
+package steam.pageobject;
 
 import aquality.selenium.elements.interfaces.ILink;
 import aquality.selenium.forms.Form;

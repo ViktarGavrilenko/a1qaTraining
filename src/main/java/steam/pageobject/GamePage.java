@@ -1,9 +1,9 @@
-package steam.pageObject;
+package steam.pageobject;
 
 import aquality.selenium.elements.interfaces.ITextBox;
 import aquality.selenium.forms.Form;
-import steam.model.Game;
 import org.openqa.selenium.By;
+import steam.model.Game;
 
 import static utils.StringUtils.getNumberFromStr;
 import static utils.StringUtils.getPriceFromStr;
