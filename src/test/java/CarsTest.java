@@ -1,11 +1,11 @@
+import Cars.models.Car;
+import Cars.pageobject.*;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
-import models.Car;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pageobject.*;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static utils.StringUtils.addSpaceBeforeParenthesis;
@@ -15,7 +15,7 @@ public class CarsTest extends Assert {
     private static final ISettingsFile TEST_FILE = new JsonSettingsFile("testData.json");
     private static final String numberFirstCar = TEST_FILE.getValue("/firstCar").toString();
     private static final String numberSecondCar = TEST_FILE.getValue("/secondCar").toString();
-    private static final String DEFAULT_URL = CONFIG_FILE.getValue("/mainPage").toString();
+    private static final String DEFAULT_URL = CONFIG_FILE.getValue("/carsPage").toString();
 
     @BeforeMethod
     protected void beforeMethod() {
