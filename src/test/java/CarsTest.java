@@ -1,30 +1,18 @@
 import cars.models.Car;
 import cars.pageobject.*;
-import aquality.selenium.core.utilities.ISettingsFile;
-import aquality.selenium.core.utilities.JsonSettingsFile;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static utils.StringUtils.addSpaceBeforeParenthesis;
 
-public class CarsTest extends Assert {
-    private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
-    private static final ISettingsFile TEST_FILE = new JsonSettingsFile("testData.json");
+public class CarsTest extends BaseTest {
     private static final String numberFirstCar = TEST_FILE.getValue("/firstCar").toString();
     private static final String numberSecondCar = TEST_FILE.getValue("/secondCar").toString();
     private static final String DEFAULT_URL = CONFIG_FILE.getValue("/carsPage").toString();
 
-    @BeforeMethod
-    protected void beforeMethod() {
-        getBrowser().maximize();
-        getBrowser().goTo(DEFAULT_URL);
-    }
-
     @Test(description = "Cars test")
     public void testCars() {
+        getBrowser().goTo(DEFAULT_URL);
         Header header = new Header();
         header.clickResearch();
 
@@ -111,10 +99,5 @@ public class CarsTest extends Assert {
                 "The engine in the first car does not match");
         assertEquals(addSpaceBeforeParenthesis(compare.getEngine(numberSecondCar)), secondCar.engine,
                 "The engine in the second car does not match");
-    }
-
-    @AfterMethod
-    public void afterMethod() {
-        getBrowser().quit();
     }
 }
