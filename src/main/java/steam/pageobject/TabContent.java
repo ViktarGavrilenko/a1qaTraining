@@ -18,7 +18,6 @@ public class TabContent extends Form {
 
     private final By byDiscountPct = By.xpath("//div[@class='discount_pct']");
     private final By byOriginalPrice = By.xpath("//div[@class='discount_original_price']");
-    private final By byFinalPrice = By.xpath("//div[@class='discount_final_price']");
 
     public TabContent() {
         super(By.xpath("//div[@class='mature_content_filtered']"), "Tab content");
@@ -33,8 +32,6 @@ public class TabContent extends Form {
             ITextBox discountPct = discountGame.findChildElement(byDiscountPct, TEXTBOX);
             if (getNumberFromStr(discountPct.getText()) > game.discountPct) {
                 game.discountPct = getNumberFromStr(discountPct.getText());
-                ITextBox finalPrice = discountGame.findChildElement(byFinalPrice, TEXTBOX);
-                game.discountFinalPrice = getPriceFromStr(finalPrice.getText());
                 ITextBox originalPrice = discountGame.findChildElement(byOriginalPrice, TEXTBOX);
                 game.discountOriginalPrice = getPriceFromStr(originalPrice.getText());
                 maxNumber = numberOnList;

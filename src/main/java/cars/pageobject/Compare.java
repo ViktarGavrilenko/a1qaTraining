@@ -34,8 +34,7 @@ public class Compare extends Form {
     }
 
     public void clickAddCar() {
-        firstCarAdd.state().waitForClickable();
-        firstCarAdd.click();
+        firstCarAdd.getJsActions().click();
     }
 
     public void addCar(Car car) {
