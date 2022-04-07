@@ -25,6 +25,9 @@ public class Compare extends Form {
     private final IButton seeComparison = getElementFactory().
             getButton(By.cssSelector("div.comparison-container button.sds-button"), "See the comparison");
 
+    private final ITextBox FormAddCar = getElementFactory().getTextBox(
+            By.xpath("//div[@id='comparison_builder_modal']//div[@class='sds-modal__content']"), "FormAddCar");
+
     private final String details = "(//div[@class='details'])[%s]//p[1]";
     private final String engine = "((//tr[@class='table-section engine-section']//following-sibling::tr)[1]//td)[%s]";
     private final String transmissions = "//td[text()='Transmissions']//..//following-sibling::tr[1]//td[%s]//p[1]";
@@ -34,10 +37,14 @@ public class Compare extends Form {
     }
 
     public void clickAddCar() {
-        firstCarAdd.getJsActions().click();
+        firstCarAdd.click();
+        if (!make.state().waitForDisplayed()) {
+            clickAddCar();
+        }
     }
 
     public void addCar(Car car) {
+        make.state().waitForClickable();
         make.state().waitForClickable();
         make.selectByText(car.make);
         model.state().waitForClickable();
