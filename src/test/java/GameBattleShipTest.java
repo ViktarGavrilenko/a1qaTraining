@@ -10,7 +10,7 @@ import seabattle.pageobject.BattleshipPage;
 import seabattle.pageobject.NotificationBattleship;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
 import static utils.ArithmeticUtils.generateRandomIntUpToMaxWithoutZero;
 
 public class GameBattleShipTest {
@@ -49,7 +49,7 @@ public class GameBattleShipTest {
             battlefield.getField();
             Logger.getInstance().info("----------Finish shot----------------");
         }
-        assertTrue(battleshipPage.isStatusGame(NotificationBattleship.WIN.getTextNotification()),
+        assertEquals(battleshipPage.getLastGameStatus(), "You WIN",
                 "The game is over because '" + battleshipPage.getLastGameStatus() + "'");
     }
 
