@@ -34,11 +34,14 @@ public class Compare extends Form {
     }
 
     public void clickAddCar() {
-        firstCarAdd.state().waitForClickable();
         firstCarAdd.click();
+        if (!make.state().waitForDisplayed()) {
+            clickAddCar();
+        }
     }
 
     public void addCar(Car car) {
+        make.state().waitForClickable();
         make.state().waitForClickable();
         make.selectByText(car.make);
         model.state().waitForClickable();
