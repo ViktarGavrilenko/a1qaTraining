@@ -7,6 +7,7 @@ import java.io.File;
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static utils.BrowserUtils.getFileLength;
 import static utils.BrowserUtils.isDownloadFile;
+import static utils.FileUtils.deleteFile;
 import static utils.StringUtils.getNameFileFromUrl;
 
 public class SmartSteamTest extends BaseTest {
@@ -46,9 +47,10 @@ public class SmartSteamTest extends BaseTest {
 
         gamePage.globalHeader.clickInstallSteam();
         AboutPage aboutPage = new AboutPage();
+        String filePath = DOWNLOADS_DIR + "/" + getNameFileFromUrl(aboutPage.getUrlFromLink());
+        deleteFile(filePath);
         aboutPage.clickInstallSteam();
         long fileSizeOnWebSite = getFileLength(aboutPage.getUrlFromLink());
-        String filePath = DOWNLOADS_DIR + "/" + getNameFileFromUrl(aboutPage.getUrlFromLink());
         assertTrue(isDownloadFile(filePath), "File should be downloaded");
 
         File file = new File(filePath);
