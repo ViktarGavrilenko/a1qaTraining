@@ -6,5 +6,9 @@
   "yearOld": 22,
   "downloadsDir": "c:\\downloads",
   "firstCar": 1,
-  "secondCar": 2
+  "secondCar": 2,
+  "originCity": "Москва",
+  "destinationCity": "Минск",
+  "departureDay": "Apr 30 2022",
+  "returnDay": "May 01 2022"
 }
