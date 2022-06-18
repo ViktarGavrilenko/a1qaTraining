@@ -4,11 +4,14 @@ import aquality.selenium.core.logging.Logger;
 import aquality.selenium.elements.interfaces.IButton;
 import aquality.selenium.elements.interfaces.ITextBox;
 import aquality.selenium.forms.Form;
+import org.openqa.selenium.By;
+import org.openqa.selenium.interactions.Actions;
 import seabattle.battleship.Cell;
 import seabattle.battleship.CellOption;
-import org.openqa.selenium.By;
 
 import java.time.Duration;
+
+import static aquality.selenium.browser.AqualityServices.getBrowser;
 
 public class BattleshipPage extends Form {
     private final IButton randomly =
@@ -30,7 +33,8 @@ public class BattleshipPage extends Form {
     }
 
     public void clickRandomly() {
-        randomly.click();
+        Actions action = new Actions(getBrowser().getDriver());
+        action.moveToElement(randomly.getElement()).click().perform();
     }
 
     public void clickPlay() {
